@@ -35,8 +35,9 @@ public sealed partial class SpecificTemperatureCondition : ReagentCondition
         return !Inverse;
     }
 
-    public override string GetGuideTip()
-    {
-
-    }
+    protected override string? ReagentConditionGuidebookText() =>
+        Loc.GetString("guidebook-reagent-condition-specific-temperature",
+            ("minTemp", MinimumTemperature),
+            ("maxTemp", MaximumTemperature),
+            ("hasMax", !float.IsPositiveInfinity(MaximumTemperature)));
 }

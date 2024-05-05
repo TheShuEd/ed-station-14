@@ -59,7 +59,7 @@ namespace Content.IntegrationTests.Tests.Chemistry
 #pragma warning restore NUnit2045
                     }
 
-                    solutionContainerSystem.SetTemperature(solutionEnt.Value, reactionPrototype.MinimumTemperature);
+                    //solutionContainerSystem.SetTemperature(solutionEnt.Value, reactionPrototype.MinimumTemperature);
 
                     if (reactionPrototype.MixingCategories != null)
                     {

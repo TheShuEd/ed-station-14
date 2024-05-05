@@ -16,12 +16,17 @@ guidebook-reagent-sources-gas-wrapper = [bold]{$name} (gas)[/bold] \[1\]
 guidebook-reagent-effects-header = Effects
 guidebook-reagent-effects-metabolism-group-rate = [bold]{$group}[/bold] [color=gray]({$rate} units per second)[/color]
 guidebook-reagent-physical-description = [italic]Seems to be {$description}.[/italic]
-guidebook-reagent-recipes-mix-info = {$minTemp ->
+
+
+# Conditions
+guidebook-reagent-condition-entry = under the conditions:
+
+guidebook-reagent-condition-specific-temperature = {$minTemp ->
     [0] {$hasMax ->
-            [true] {CAPITALIZE($verb)} below {NATURALFIXED($maxTemp, 2)}K
-            *[false] {CAPITALIZE($verb)}
+            [true] temperature below {NATURALFIXED($maxTemp, 2)}K
+            *[false] at any temperature
         }
-    *[other] {CAPITALIZE($verb)} {$hasMax ->
+    *[other] temperature {$hasMax ->
             [true] between {NATURALFIXED($minTemp, 2)}K and {NATURALFIXED($maxTemp, 2)}K
             *[false] above {NATURALFIXED($minTemp, 2)}K
         }

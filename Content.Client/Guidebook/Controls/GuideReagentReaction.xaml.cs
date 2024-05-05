@@ -190,14 +190,15 @@ public sealed partial class GuideReagentReaction : BoxContainer, ISearchableCont
         var mixingVerb = ContentLocalizationManager.FormatList(mixingCategories
             .Select(p => Loc.GetString(p.VerbText)).ToList());
 
-        var minTemp = prototype?.MinimumTemperature ?? 0;
-        var maxTemp = prototype?.MaximumTemperature ?? float.PositiveInfinity;
-        var text = Loc.GetString("guidebook-reagent-recipes-mix-info",
-            ("verb", mixingVerb),
-            ("minTemp", minTemp),
-            ("maxTemp", maxTemp),
-            ("hasMax", !float.IsPositiveInfinity(maxTemp)));
-
+        var text = $"{mixingVerb}";
+        if (prototype != null && prototype.Conditions.Count > 0)
+        {
+            text += $"{Loc.GetString("guidebook-reagent-condition-entry")} \n";
+            foreach (var condition in prototype.Conditions)
+            {
+                text += $"{condition.ReagentConditionGuidebookText()} \n";
+            }
+        }
         MixLabel.SetMarkup(text);
     }
 
