@@ -27,12 +27,6 @@ namespace Content.Shared.Chemistry.Reaction
         public Dictionary<string, ReactantPrototype> Reactants = new();
 
         /// <summary>
-        /// All possible requirements and conditions to be able to perform this reaction
-        /// </summary>
-        [DataField]
-        public List<ReagentCondition> Conditions = new();
-
-        /// <summary>
         ///     If true, this reaction will attempt to conserve thermal energy.
         /// </summary>
         [DataField]
@@ -49,6 +43,11 @@ namespace Content.Shared.Chemistry.Reaction
         /// </summary>
         [DataField(customTypeSerializer:typeof(PrototypeIdDictionarySerializer<FixedPoint2, ReagentPrototype>))]
         public Dictionary<string, FixedPoint2> Products = new();
+
+        /// <summary>
+        /// All possible requirements and conditions to be able to perform this reaction
+        /// </summary>
+        [DataField(serverOnly: true)] public List<ReactionCondition> Conditions = new();
 
         /// <summary>
         /// Effects to be triggered when the reaction occurs.

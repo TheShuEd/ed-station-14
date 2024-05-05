@@ -1,11 +1,13 @@
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.Reaction;
 using Content.Shared.Chemistry.Reagent;
+using JetBrains.Annotations;
 
-namespace Content.Server.Chemistry.ReagentConditions;
+namespace Content.Server.Chemistry.ReactionConditions;
 
+[UsedImplicitly]
 [DataDefinition]
-public sealed partial class SpecificTemperatureCondition : ReagentCondition
+public sealed partial class SpecificTemperatureCondition : ReactionCondition
 {
     /// <summary>
     /// The minimum temperature the reaction can occur at.
@@ -25,7 +27,7 @@ public sealed partial class SpecificTemperatureCondition : ReagentCondition
     [DataField]
     public bool Inverse = false;
 
-    public override bool Check(Entity<SolutionComponent> soln, ReactionPrototype reaction, ReactionMixerComponent? mixerComponent)
+    public override bool Check(Entity<SolutionComponent> soln, ReactionMixerComponent? mixerComponent)
     {
         var solution = soln.Comp.Solution;
 
@@ -35,7 +37,7 @@ public sealed partial class SpecificTemperatureCondition : ReagentCondition
         return !Inverse;
     }
 
-    protected override string? ReagentConditionGuidebookText() =>
+    public override string? ReagentConditionGuidebookText() =>
         Loc.GetString("guidebook-reagent-condition-specific-temperature",
             ("minTemp", MinimumTemperature),
             ("maxTemp", MaximumTemperature),

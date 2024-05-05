@@ -96,7 +96,7 @@ namespace Content.Shared.Chemistry.Reaction
             lowestUnitReactions = FixedPoint2.MaxValue;
             foreach (var condition in reaction.Conditions)
             {
-                if (!condition.Check(soln, reaction, mixerComponent))
+                if (!condition.Check(soln, mixerComponent))
                 {
                     lowestUnitReactions = FixedPoint2.Zero;
                     return false;
