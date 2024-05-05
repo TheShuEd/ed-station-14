@@ -8,6 +8,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using System.Collections.Frozen;
 using System.Linq;
+using Content.Shared.Clothing;
 
 
 namespace Content.Shared.Chemistry.Reaction
@@ -93,15 +94,13 @@ namespace Content.Shared.Chemistry.Reaction
             var solution = soln.Comp.Solution;
 
             lowestUnitReactions = FixedPoint2.MaxValue;
-            if (solution.Temperature < reaction.MinimumTemperature)
+            foreach (var condition in reaction.Conditions)
             {
-                lowestUnitReactions = FixedPoint2.Zero;
-                return false;
-            }
-            if (solution.Temperature > reaction.MaximumTemperature)
-            {
-                lowestUnitReactions = FixedPoint2.Zero;
-                return false;
+                if (!condition.Check(soln, reaction, mixerComponent))
+                {
+                    lowestUnitReactions = FixedPoint2.Zero;
+                    return false;
+                }
             }
 
             if ((mixerComponent == null && reaction.MixingCategories != null) ||

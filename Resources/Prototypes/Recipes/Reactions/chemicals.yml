@@ -207,7 +207,9 @@
 
 - type: reaction
   id: TableSalt
-  minTemp: 370
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 370
   reactants:
     Chlorine:
       amount: 1
@@ -281,7 +283,9 @@
 - type: reaction
   id: Desoxyephedrine
   impact: Medium
-  minTemp: 370
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 370
   reactants:
     Ephedrine:
       amount: 1
@@ -297,7 +301,9 @@
 - type: reaction
   id: Stimulants
   impact: Medium
-  minTemp: 370
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 370
   reactants:
     Ephedrine:
       amount: 1
@@ -326,7 +332,9 @@
 - type: reaction
   id: MuteToxin
   impact: Medium
-  minTemp: 370
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 370
   reactants:
     Uranium:
       amount: 1
@@ -425,7 +433,9 @@
 
 - type: reaction
   id: Benzene
-  minTemp: 310
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 310
   reactants:
     Hydrogen:
       amount: 1
@@ -435,7 +445,9 @@
     Benzene: 1
 
 - type: reaction
-  minTemp: 310
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 310
   id: Hydroxide
   priority: -1 #needs to be here due to how sulfuric acid reaction words
   reactants:
@@ -457,7 +469,9 @@
     SodiumHydroxide: 2
 
 - type: reaction
-  minTemp: 310
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 310
   id: Fersilicite
   reactants:
     Iron:

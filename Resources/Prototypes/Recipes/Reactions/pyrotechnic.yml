@@ -31,7 +31,9 @@
 
 - type: reaction
   id: ChlorineTrifluoride
-  minTemp: 370
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 370
   priority: 20
   reactants:
     Chlorine:
@@ -54,7 +56,9 @@
 
 - type: reaction
   id: Ash
-  minTemp: 520
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 520 
   reactants:
     Oil:
       amount: 1

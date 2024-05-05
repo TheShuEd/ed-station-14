@@ -17,32 +17,26 @@ namespace Content.Shared.Chemistry.Reaction
         [IdDataField]
         public string ID { get; private set; } = default!;
 
-        [DataField("name")]
+        [DataField]
         public string Name { get; private set; } = string.Empty;
 
         /// <summary>
         /// Reactants required for the reaction to occur.
         /// </summary>
-        [DataField("reactants", customTypeSerializer:typeof(PrototypeIdDictionarySerializer<ReactantPrototype, ReagentPrototype>))]
+        [DataField(customTypeSerializer:typeof(PrototypeIdDictionarySerializer<ReactantPrototype, ReagentPrototype>))]
         public Dictionary<string, ReactantPrototype> Reactants = new();
 
         /// <summary>
-        ///     The minimum temperature the reaction can occur at.
+        /// All possible requirements and conditions to be able to perform this reaction
         /// </summary>
-        [DataField("minTemp")]
-        public float MinimumTemperature = 0.0f;
+        [DataField]
+        public List<ReagentCondition> Conditions = new();
 
         /// <summary>
         ///     If true, this reaction will attempt to conserve thermal energy.
         /// </summary>
-        [DataField("conserveEnergy")]
+        [DataField]
         public bool ConserveEnergy = true;
-
-        /// <summary>
-        ///     The maximum temperature the reaction can occur at.
-        /// </summary>
-        [DataField("maxTemp")]
-        public float MaximumTemperature = float.PositiveInfinity;
 
         /// <summary>
         ///     The required mixing categories for an entity to mix the solution with for the reaction to occur
@@ -53,13 +47,13 @@ namespace Content.Shared.Chemistry.Reaction
         /// <summary>
         /// Reagents created when the reaction occurs.
         /// </summary>
-        [DataField("products", customTypeSerializer:typeof(PrototypeIdDictionarySerializer<FixedPoint2, ReagentPrototype>))]
+        [DataField(customTypeSerializer:typeof(PrototypeIdDictionarySerializer<FixedPoint2, ReagentPrototype>))]
         public Dictionary<string, FixedPoint2> Products = new();
 
         /// <summary>
         /// Effects to be triggered when the reaction occurs.
         /// </summary>
-        [DataField("effects", serverOnly: true)] public List<ReagentEffect> Effects = new();
+        [DataField(serverOnly: true)] public List<ReagentEffect> Effects = new();
 
         /// <summary>
         /// How dangerous is this effect? Stuff like bicaridine should be low, while things like methamphetamine

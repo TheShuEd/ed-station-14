@@ -262,7 +262,9 @@
 
 - type: reaction
   id: Impedrezene
-  minTemp: 370
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 370
   reactants:
     Mercury:
       amount: 1
@@ -312,7 +314,9 @@
 
 - type: reaction
   id: MindbreakerToxin
-  minTemp: 370
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 370
   reactants:
     Silicon:
       amount: 1
@@ -383,7 +387,9 @@
 - type: reaction
   id: Sigynate
   impact: Medium
-  minTemp: 370
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 370
   reactants:
     SodiumCarbonate:
       amount: 1
@@ -411,7 +417,9 @@
 - type: reaction
   id: Lacerinol
   impact: Medium
-  minTemp: 335
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 335
   reactants:
     Bicaridine: # Bicaridine is a conflicting brute medication and if mixed incorrectly will make Razorium. This is intended.
       amount: 1
@@ -423,7 +431,9 @@
 - type: reaction
   id: Puncturase
   impact: Medium
-  minTemp: 325
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 325
   reactants:
     Bicaridine: # Bicaridine is a conflicting brute medication and if mixed incorrectly will make Razorium. This is intended.
       amount: 1
@@ -514,7 +524,9 @@
 - type: reaction
   id: Diphenhydramine
   impact: Medium
-  minTemp: 377.59
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 377
   reactants:
     Diethylamine:
       amount: 1
@@ -532,7 +544,9 @@
 - type: reaction
   id: Pyrazine
   impact: Medium
-  minTemp: 540
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 540
   reactants:
     Leporazine:
       amount: 1
@@ -546,7 +560,9 @@
 - type: reaction
   id: Insuzine
   impact: Medium
-  minTemp: 433
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 433
   reactants:
     Leporazine:
       amount: 1
@@ -559,7 +575,9 @@
 
 - type: reaction
   id: Opporozidone
-  minTemp: 400 #Maybe if a method of reducing reagent temp exists one day, this could be -50
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 400 #Maybe if a method of reducing reagent temp exists one day, this could be -50
   reactants:
     Cognizine: 
       amount: 1
@@ -573,7 +591,9 @@
 - type: reaction
   id: Necrosol
   impact: Medium
-  minTemp: 370
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 370
   reactants:
     Blood:
       amount: 3

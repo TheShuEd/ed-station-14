@@ -325,7 +325,9 @@
 #- type: reaction
 #  id: SugarBreakdown
 #  source: true
-#  minTemp: 520
+#  conditions:
+#    - !type:SpecificTemperatureCondition
+#      minimumTemperature: 520
 #  reactants:
 #    Sugar:
 #      amount: 4

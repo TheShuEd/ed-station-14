@@ -455,7 +455,9 @@
 
 - type: reaction
   id: HotCocoa
-  minTemp: 350
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 350
   reactants:
     Water:
       amount: 1
@@ -1049,7 +1051,9 @@
 
 - type: reaction
   id: HotRamen
-  minTemp: 323.15
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 320
   reactants:
     DryRamen:
       amount: 5

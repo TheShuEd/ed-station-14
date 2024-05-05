@@ -73,7 +73,9 @@
 
 - type: reaction
   id: SpaceGlue
-  minTemp: 370
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 370
   reactants:
     SpaceLube:
       amount: 1
@@ -96,7 +98,9 @@
   id: PlasticSheet # It's here because "haha look you can get smooth beautiful sheets of plastic from small cylindric beaker" (jokes aside: i dont know where should i put it)
   impact: Low
   quantized: true
-  minTemp: 374
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 374
   reactants:
     Oil:
       amount: 5
@@ -174,7 +178,9 @@
 - type: reaction
   id: CreateCrystals
   quantized: true
-  minTemp: 374
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 374
   reactants:
     Sugar:
       amount: 15
@@ -190,7 +196,9 @@
   id: Gunpowder
   impact: Low
   quantized: true
-  minTemp: 374
+  conditions:
+    - !type:SpecificTemperatureCondition
+      minimumTemperature: 374
   reactants:
     Potassium:
       amount: 6
