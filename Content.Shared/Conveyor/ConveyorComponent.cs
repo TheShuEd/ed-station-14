@@ -59,5 +59,6 @@ public partial record struct FixtureSettings()
     /// </summary>
     public Angle Angle { get; set; } = Angle.Zero;
 
+    [field: NonSerialized]
     public HashSet<EntityUid> Intersecting { get; set; } = new();
 }
