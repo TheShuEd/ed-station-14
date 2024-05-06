@@ -8,12 +8,8 @@ namespace Content.Shared.Conveyor;
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class ConveyorComponent : Component
 {
-    /// <summary>
-    ///     The angle to move entities by in relation to the owner's rotation.
-    /// </summary>
-    [ViewVariables(VVAccess.ReadWrite)]
     [DataField, AutoNetworkedField]
-    public Angle Angle = Angle.Zero;
+    public Dictionary<string, FixtureSettings> Fixtures = new();
 
     /// <summary>
     ///     The amount of units to move the entity by per second.
@@ -39,9 +35,6 @@ public sealed partial class ConveyorComponent : Component
 
     [DataField]
     public ProtoId<SinkPortPrototype> OffPort = "Off";
-
-    [ViewVariables]
-    public readonly HashSet<EntityUid> Intersecting = new();
 }
 
 [Serializable, NetSerializable]
@@ -58,3 +51,13 @@ public enum ConveyorState : byte
     Reverse
 }
 
+[Serializable, NetSerializable, DataRecord]
+public partial record struct FixtureSettings()
+{
+    /// <summary>
+    ///     The angle to move entities by in relation to the owner's rotation.
+    /// </summary>
+    public Angle Angle { get; set; } = Angle.Zero;
+
+    public HashSet<EntityUid> Intersecting { get; set; } = new();
+}

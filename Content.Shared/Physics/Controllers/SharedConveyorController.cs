@@ -19,8 +19,6 @@ public abstract class SharedConveyorController : VirtualController
     [Dependency] protected readonly SharedPhysicsSystem Physics = default!;
     [Dependency] private readonly SharedGravitySystem _gravity = default!;
 
-    protected const string ConveyorFixture = "conveyor";
-
     private static readonly Vector2 _expansion = new Vector2(0.1f, 0.1f);
 
     public override void Initialize()
@@ -40,15 +38,24 @@ public abstract class SharedConveyorController : VirtualController
         if (args.OtherBody.BodyType == BodyType.Static || component.State == ConveyorState.Off)
             return;
 
-        component.Intersecting.Add(otherUid);
+        component.Fixtures[args.OurFixtureId].Intersecting.Add(otherUid);
         EnsureComp<ActiveConveyorComponent>(uid);
     }
 
     private void OnConveyorEndCollide(EntityUid uid, ConveyorComponent component, ref EndCollideEvent args)
     {
-        component.Intersecting.Remove(args.OtherEntity);
+        component.Fixtures[args.OurFixtureId].Intersecting.Remove(args.OtherEntity);
 
-        if (component.Intersecting.Count == 0)
+        var remActive = true;
+        foreach (var fixture in component.Fixtures.Values)
+        {
+            if (fixture.Intersecting.Count != 0)
+            {
+                remActive = false;
+                break;
+            }
+        }
+        if (remActive)
             RemComp<ActiveConveyorComponent>(uid);
     }
 
@@ -82,17 +89,15 @@ public abstract class SharedConveyorController : VirtualController
         var conveyorPos = xform.LocalPosition;
         var conveyorRot = xform.LocalRotation;
 
-        conveyorRot += comp.Angle;
-
         if (comp.State == ConveyorState.Reverse)
             conveyorRot += MathF.PI;
 
-        var direction = conveyorRot.ToWorldVec();
-
-        foreach (var (entity, transform, body) in GetEntitiesToMove(comp, xform, xformQuery, bodyQuery))
+        foreach (var (entity, transform, body, angle) in GetEntitiesToMove(comp, xform, xformQuery, bodyQuery))
         {
             if (!conveyed.Add(entity) || prediction && !body.Predict)
                 continue;
+
+            var direction = (conveyorRot + angle).ToWorldVec();
 
             var localPos = transform.LocalPosition;
             var itemRelative = conveyorPos - localPos;
@@ -140,7 +145,7 @@ public abstract class SharedConveyorController : VirtualController
         }
     }
 
-    private IEnumerable<(EntityUid, TransformComponent, PhysicsComponent)> GetEntitiesToMove(
+    private IEnumerable<(EntityUid, TransformComponent, PhysicsComponent, Angle)> GetEntitiesToMove(
         ConveyorComponent comp,
         TransformComponent xform,
         EntityQuery<TransformComponent> xformQuery,
@@ -151,22 +156,25 @@ public abstract class SharedConveyorController : VirtualController
         var tile = grid.GetTileRef(xform.Coordinates);
         var conveyorBounds = Lookup.GetLocalBounds(tile, grid.TileSize);
 
-        foreach (var entity in comp.Intersecting)
+        foreach (var fixture in comp.Fixtures)
         {
-            if (!xformQuery.TryGetComponent(entity, out var entityXform) || entityXform.ParentUid != xform.GridUid!.Value)
-                continue;
+            foreach (var entity in fixture.Value.Intersecting)
+            {
+                if (!xformQuery.TryGetComponent(entity, out var entityXform) || entityXform.ParentUid != xform.GridUid!.Value)
+                    continue;
 
-            if (!bodyQuery.TryGetComponent(entity, out var physics) || physics.BodyType == BodyType.Static || physics.BodyStatus == BodyStatus.InAir || _gravity.IsWeightless(entity, physics, entityXform))
-                continue;
+                if (!bodyQuery.TryGetComponent(entity, out var physics) || physics.BodyType == BodyType.Static || physics.BodyStatus == BodyStatus.InAir || _gravity.IsWeightless(entity, physics, entityXform))
+                    continue;
 
-            // Yes there's still going to be the occasional rounding issue where it stops getting conveyed
-            // When you fix the corner issue that will fix this anyway.
-            var gridAABB = new Box2(entityXform.LocalPosition - _expansion, entityXform.LocalPosition + _expansion);
+                // Yes there's still going to be the occasional rounding issue where it stops getting conveyed
+                // When you fix the corner issue that will fix this anyway.
+                var gridAABB = new Box2(entityXform.LocalPosition - _expansion, entityXform.LocalPosition + _expansion);
 
-            if (!conveyorBounds.Intersects(gridAABB))
-                continue;
+                if (!conveyorBounds.Intersects(gridAABB))
+                    continue;
 
-            yield return (entity, entityXform, physics);
+                yield return (entity, entityXform, physics, fixture.Value.Angle);
+            }
         }
     }
 

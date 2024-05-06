@@ -11,33 +11,9 @@
       "name": "conveyor_loose"
     },
     {
-      "name": "conveyor_started_ccw",
-      "directions": 8,
+      "name": "straight_started",
+      "directions": 4,
       "delays": [
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
         [
           0.1,
           0.1,
@@ -65,33 +41,9 @@
       ]
     },
     {
-      "name": "conveyor_started_ccw_r",
-      "directions": 8,
+      "name": "straight_started_r",
+      "directions": 4,
       "delays": [
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
         [
           0.1,
           0.1,
@@ -119,33 +71,9 @@
       ]
     },
     {
-      "name": "conveyor_started_cw",
-      "directions": 8,
+      "name": "angle_started",
+      "directions": 4,
       "delays": [
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
         [
           0.1,
           0.1,
@@ -173,33 +101,9 @@
       ]
     },
     {
-      "name": "conveyor_started_cw_r",
-      "directions": 8,
+      "name": "angle_started_r",
+      "directions": 4,
       "delays": [
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ],
         [
           0.1,
           0.1,
@@ -227,12 +131,12 @@
       ]
     },
     {
-      "name": "conveyor_stopped_ccw",
-      "directions": 8
+      "name": "angle_stopped",
+      "directions": 4
     },
     {
-      "name": "conveyor_stopped_cw",
-      "directions": 8
+      "name": "straight_stopped",
+      "directions": 4
     },
     {
       "name": "greenlight"

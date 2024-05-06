@@ -37,17 +37,6 @@ public sealed class ConveyorController : SharedConveyorController
     private void OnInit(EntityUid uid, ConveyorComponent component, ComponentInit args)
     {
         _signalSystem.EnsureSinkPorts(uid, component.ReversePort, component.ForwardPort, component.OffPort);
-
-        if (TryComp<PhysicsComponent>(uid, out var physics))
-        {
-            var shape = new PolygonShape();
-            shape.SetAsBox(0.55f, 0.55f);
-
-            _fixtures.TryCreateFixture(uid, shape, ConveyorFixture,
-                collisionLayer: (int) (CollisionGroup.LowImpassable | CollisionGroup.MidImpassable |
-                                       CollisionGroup.Impassable), hard: false, body: physics);
-
-        }
     }
 
     private void OnConveyorShutdown(EntityUid uid, ConveyorComponent component, ComponentShutdown args)
@@ -59,8 +48,6 @@ public sealed class ConveyorController : SharedConveyorController
 
         if (!TryComp<PhysicsComponent>(uid, out var physics))
             return;
-
-        _fixtures.DestroyFixture(uid, ConveyorFixture, body: physics);
     }
 
     private void OnPowerChanged(EntityUid uid, ConveyorComponent component, ref PowerChangedEvent args)
