@@ -8,7 +8,8 @@ mixing-verb-electrolysis = electrolyze
 mixing-verb-holy = bless
 mixing-verb-stir = stir
 mixing-verb-shake = shake
-
+mixing-verb-cooking = cook
+mixing-verb-cooking-screwed = undercook
 ## Entity
 
 default-mixing-success = You mix the {$mixed} with the {$mixer}

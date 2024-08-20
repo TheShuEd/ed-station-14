@@ -65,3 +65,19 @@
   icon:
     sprite: Objects/Misc/utensils.rsi
     state: spoon
+
+# Cooking Mixing methods
+
+- type: mixingCategory
+  id: Cooking
+  verbText: mixing-verb-cooking
+  icon: 
+    sprite: Structures/Machines/electric_grill.rsi
+    state: guidebook
+
+- type: mixingCategory
+  id: CookingScrewed
+  verbText: mixing-verb-cooking-screwed
+  icon: 
+    sprite: Structures/Machines/electric_grill.rsi
+    state: guidebook

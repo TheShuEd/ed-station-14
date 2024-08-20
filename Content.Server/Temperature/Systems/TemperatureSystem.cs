@@ -66,25 +66,25 @@ public sealed class TemperatureSystem : EntitySystem
 
         // conduct heat from the surface to the inside of entities with internal temperatures
         var query = EntityQueryEnumerator<InternalTemperatureComponent, TemperatureComponent>();
-        while (query.MoveNext(out var uid, out var comp, out var temp))
+        while (query.MoveNext(out var uid, out var internalTemp, out var externalTemp))
         {
             // don't do anything if they equalised
-            var diff = Math.Abs(temp.CurrentTemperature - comp.Temperature);
+            var diff = Math.Abs(externalTemp.CurrentTemperature - internalTemp.Temperature);
             if (diff < 0.1f)
                 continue;
 
             // heat flow in W/m^2 as per fourier's law in 1D.
-            var q = comp.Conductivity * diff / comp.Thickness;
+            var q = internalTemp.Conductivity * diff / internalTemp.Thickness;
 
             // convert to J then K
-            var joules = q * comp.Area * frameTime;
-            var degrees = joules / GetHeatCapacity(uid, temp);
-            if (temp.CurrentTemperature < comp.Temperature)
+            var joules = q * internalTemp.Area * frameTime;
+            var degrees = joules / GetHeatCapacity(uid, externalTemp);
+            if (externalTemp.CurrentTemperature < internalTemp.Temperature)
                 degrees *= -1;
 
             // exchange heat between inside and surface
-            comp.Temperature += degrees;
-            ForceChangeTemperature(uid, temp.CurrentTemperature - degrees, temp);
+            internalTemp.Temperature += degrees;
+            ForceChangeTemperature(uid, externalTemp.CurrentTemperature - degrees, externalTemp);
         }
 
         UpdateDamage(frameTime);
@@ -307,7 +307,7 @@ public sealed class TemperatureSystem : EntitySystem
 
     private void ChangeTemperatureOnCollide(Entity<ChangeTemperatureOnCollideComponent> ent, ref ProjectileHitEvent args)
     {
-        _temperature.ChangeHeat(args.Target, ent.Comp.Heat, ent.Comp.IgnoreHeatResistance);// adjust the temperature 
+        _temperature.ChangeHeat(args.Target, ent.Comp.Heat, ent.Comp.IgnoreHeatResistance);// adjust the temperature
     }
 
     private void OnParentChange(EntityUid uid, TemperatureComponent component,
