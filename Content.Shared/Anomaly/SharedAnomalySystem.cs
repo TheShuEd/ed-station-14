@@ -1,13 +1,10 @@
 using Content.Shared.Administration.Logs;
 using Content.Shared.Anomaly.Components;
 using Content.Shared.Anomaly.Prototypes;
-using Content.Shared.Damage;
 using Content.Shared.Database;
-using Content.Shared.Interaction;
 using Content.Shared.Physics;
 using Content.Shared.Popups;
 using Content.Shared.Weapons.Melee.Components;
-using Content.Shared.Weapons.Melee.Events;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -21,6 +18,7 @@ using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using System.Linq;
 using System.Numerics;
+using Content.Shared.Actions;
 
 namespace Content.Shared.Anomaly;
 
@@ -145,7 +143,7 @@ public abstract class SharedAnomalySystem : EntitySystem
         if (!Timing.IsFirstTimePredicted)
             return;
 
-        Audio.PlayPvs(component.SupercriticalSound, uid);
+        Audio.PlayPvs(component.SupercriticalSound, Transform(uid).Coordinates);
 
         if (_net.IsServer)
             Log.Info($"Raising supercritical event. Entity: {ToPrettyString(uid)}");
@@ -169,7 +167,8 @@ public abstract class SharedAnomalySystem : EntitySystem
     /// <param name="uid">The anomaly being shut down</param>
     /// <param name="component"></param>
     /// <param name="supercritical">Whether or not the anomaly ended via supercritical event</param>
-    public void EndAnomaly(EntityUid uid, AnomalyComponent? component = null, bool supercritical = false)
+    /// <param name="spawnCore">Create anomaly cores based on the result of completing an anomaly?</param>
+    public void EndAnomaly(EntityUid uid, AnomalyComponent? component = null, bool supercritical = false, bool spawnCore = true)
     {
         // Logging before resolve, in case the anomaly has deleted itself.
         if (_net.IsServer)
@@ -186,9 +185,11 @@ public abstract class SharedAnomalySystem : EntitySystem
         if (Terminating(uid) || _net.IsClient)
             return;
 
-        Spawn(supercritical ? component.CorePrototype : component.CoreInertPrototype, Transform(uid).Coordinates);
+        if (spawnCore)
+            Spawn(supercritical ? component.CorePrototype : component.CoreInertPrototype, Transform(uid).Coordinates);
 
-        QueueDel(uid);
+        if (component.DeleteEntity)
+            QueueDel(uid);
     }
 
     /// <summary>
@@ -458,3 +459,5 @@ public partial record struct AnomalySpawnSettings()
     /// </summary>
     public bool SpawnOnSeverityChanged { get; set; } = false;
 }
+
+public sealed partial class ActionAnomalyPulseEvent : InstantActionEvent { }
