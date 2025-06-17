@@ -1,35 +1,15 @@
-﻿using System.Linq;
+﻿using System.Reflection;
 using System.Threading.Tasks;
 using Content.Shared.CCVar;
 using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using Robust.Shared.Configuration;
-using Robust.Shared.Reflection;
 using Robust.Shared.Utility;
 using LogMessage = Discord.LogMessage;
 
 namespace Content.Server.Discord.DiscordLink;
-
-/// <summary>
-/// Represents the arguments for the <see cref="DiscordLink.OnCommandReceived"/> event.
-/// </summary>
-public sealed class CommandReceivedEventArgs
-{
-    /// <summary>
-    /// The command that was received. This is the first word in the message, after the bot prefix.
-    /// </summary>
-    public string Command { get; init; } = string.Empty;
-
-    /// <summary>
-    /// The arguments to the command. This is everything after the command
-    /// </summary>
-    public string Arguments { get; init; } = string.Empty;
-    /// <summary>
-    /// Information about the message that the command was received from. This includes the message content, author, etc.
-    /// Use this to reply to the message, delete it, etc.
-    /// </summary>
-    public SocketMessage Message { get; init; } = default!;
-}
 
 /// <summary>
 /// Handles the connection to Discord and provides methods to interact with it.
@@ -46,6 +26,9 @@ public sealed class DiscordLink : IPostInjectInit
     ///     This should not be used directly outside of DiscordLink. So please do not make it public. Use the methods in this class instead.
     /// </remarks>
     private DiscordSocketClient? _client;
+    private InteractionService? _interaction;
+    private IServiceProvider? _serviceProvider;
+
     private ISawmill _sawmill = default!;
     private ISawmill _sawmillLog = default!;
 
@@ -61,22 +44,9 @@ public sealed class DiscordLink : IPostInjectInit
     #region Events
 
     /// <summary>
-    ///     Event that is raised when a command is received from Discord.
-    /// </summary>
-    public event Action<CommandReceivedEventArgs>? OnCommandReceived;
-    /// <summary>
     ///     Event that is raised when a message is received from Discord. This is raised for every message, including commands.
     /// </summary>
     public event Action<SocketMessage>? OnMessageReceived;
-
-    public void RegisterCommandCallback(Action<CommandReceivedEventArgs> callback, string command)
-    {
-        OnCommandReceived += args =>
-        {
-            if (args.Command == command)
-                callback(args);
-        };
-    }
 
     #endregion
 
@@ -109,9 +79,17 @@ public sealed class DiscordLink : IPostInjectInit
                              | GatewayIntents.MessageContent
                              | GatewayIntents.DirectMessages,
         });
+
+        _interaction = new InteractionService(_client);
+
+        _serviceProvider = new ServiceCollection()
+            .AddSingleton(_client)
+            .AddSingleton(_interaction)
+            .BuildServiceProvider();
+
         _client.Log += Log;
-        _client.MessageReceived += OnCommandReceivedInternal;
         _client.MessageReceived += OnMessageReceivedInternal;
+        _client.InteractionCreated += HandleInteraction;
 
         _botToken = token;
         // Since you cannot change the token while the server is running / the DiscordLink is initialized,
@@ -120,6 +98,7 @@ public sealed class DiscordLink : IPostInjectInit
         _client.Ready += () =>
         {
             _sawmill.Info("Discord client ready.");
+            RegisterSlashCommands();
             return Task.CompletedTask;
         };
 
@@ -136,6 +115,26 @@ public sealed class DiscordLink : IPostInjectInit
         });
     }
 
+    private async Task RegisterSlashCommands()
+    {
+        if (_interaction == null)
+            return;
+
+        _sawmill.Info("Registering slash commands...");
+        await _interaction.AddModulesAsync(Assembly.GetEntryAssembly(), _serviceProvider);
+        await _interaction.RegisterCommandsToGuildAsync(_guildId);
+        _sawmill.Info("Slash commands registered.");
+    }
+
+    private async Task HandleInteraction(SocketInteraction interaction)
+    {
+        if (_interaction == null)
+            return;
+
+        var context = new SocketInteractionContext(_client, interaction);
+        await _interaction.ExecuteCommandAsync(context, _serviceProvider);
+    }
+
     public async Task Shutdown()
     {
         if (_client != null)
@@ -143,8 +142,8 @@ public sealed class DiscordLink : IPostInjectInit
             _sawmill.Info("Disconnecting from Discord.");
 
             // Unsubscribe from the events.
-            _client.MessageReceived -= OnCommandReceivedInternal;
             _client.MessageReceived -= OnMessageReceivedInternal;
+            _client.InteractionCreated -= HandleInteraction;
 
             await _client.LogoutAsync();
             await _client.StopAsync();
@@ -202,40 +201,6 @@ public sealed class DiscordLink : IPostInjectInit
         };
 
         _sawmillLog.Log(logLevel, FormatLog(msg));
-        return Task.CompletedTask;
-    }
-
-    private Task OnCommandReceivedInternal(SocketMessage message)
-    {
-        var content = message.Content;
-        // If the message doesn't start with the bot prefix, ignore it.
-        if (!content.StartsWith(BotPrefix))
-            return Task.CompletedTask;
-
-        // Split the message into the command and the arguments.
-        var trimmedInput = content[BotPrefix.Length..].Trim();
-        var firstSpaceIndex = trimmedInput.IndexOf(' ');
-
-        string command, arguments;
-
-        if (firstSpaceIndex == -1)
-        {
-            command = trimmedInput;
-            arguments = string.Empty;
-        }
-        else
-        {
-            command = trimmedInput[..firstSpaceIndex];
-            arguments = trimmedInput[(firstSpaceIndex + 1)..].Trim();
-        }
-
-        // Raise the event!
-        OnCommandReceived?.Invoke(new CommandReceivedEventArgs
-        {
-            Command = command,
-            Arguments = arguments,
-            Message = message,
-        });
         return Task.CompletedTask;
     }
 
