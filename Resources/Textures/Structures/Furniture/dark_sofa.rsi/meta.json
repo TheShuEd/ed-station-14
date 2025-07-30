@@ -1,0 +1,75 @@
+{
+    "version": 1,
+    "license": "CC-BY-SA-3.0",
+    "copyright": "Taken from TG at commit https://github.com/tgstation/tgstation/commit/45b5bc20fbc0bdeb04e169f7aaa7ea8e14b4990b#diff-5d71c782b900bc77b4d1c5798be8d3e3c67dbc5ef5b3203c4995f01df471a633, edited by TheShuEd",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "sofa_0",
+            "directions": 4
+        },
+        {
+            "name": "sofa_1",
+            "directions": 4
+        },
+        {
+            "name": "sofa_2",
+            "directions": 4
+        },
+        {
+            "name": "sofa_3",
+            "directions": 4
+        },
+        {
+            "name": "sofa_4",
+            "directions": 4
+        },
+        {
+            "name": "sofa_5",
+            "directions": 4
+        },
+        {
+            "name": "sofa_6",
+            "directions": 4
+        },
+        {
+            "name": "sofa_7",
+            "directions": 4
+        },
+        {
+            "name": "sofa_8",
+            "directions": 4
+        },
+        {
+            "name": "sofa_9",
+            "directions": 4
+        },
+        {
+            "name": "sofa_10",
+            "directions": 4
+        },
+        {
+            "name": "sofa_11",
+            "directions": 4
+        },
+        {
+            "name": "sofa_12",
+            "directions": 4
+        },
+        {
+            "name": "sofa_13",
+            "directions": 4
+        },
+        {
+            "name": "sofa_14",
+            "directions": 4
+        },
+        {
+            "name": "sofa_15",
+            "directions": 4
+        }
+    ]
+}
