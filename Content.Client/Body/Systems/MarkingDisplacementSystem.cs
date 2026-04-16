@@ -24,11 +24,20 @@ public sealed class MarkingDisplacementSystem : EntitySystem
 
         SubscribeLocalEvent<MarkingDisplacementComponent, OrganGotInsertedEvent>(OnInserted, after: [typeof(VisualBodySystem)]);
         SubscribeLocalEvent<MarkingDisplacementComponent, OrganGotRemovedEvent>(OnRemoved, after: [typeof(VisualBodySystem)]);
+        SubscribeLocalEvent<MarkingDisplacementComponent, BodyRelayedEvent<ApplyOrganMarkingsEvent>>(OnMarkingsApplied, after: [typeof(SharedVisualBodySystem)]);
     }
 
     private void OnInserted(Entity<MarkingDisplacementComponent> ent, ref OrganGotInsertedEvent args)
     {
         ApplyDisplacements(ent, args.Target);
+    }
+
+    private void OnMarkingsApplied(Entity<MarkingDisplacementComponent> ent, ref BodyRelayedEvent<ApplyOrganMarkingsEvent> args)
+    {
+        if (Comp<OrganComponent>(ent).Body is not { } body)
+            return;
+
+        ApplyDisplacements(ent, body);
     }
 
     private void OnRemoved(Entity<MarkingDisplacementComponent> ent, ref OrganGotRemovedEvent args)
