@@ -12,7 +12,7 @@ namespace Content.Client.Body;
 /// Applies displacement maps to marking layers (Hair, FacialHair, etc.) after they are rendered.
 /// Works with <see cref="MarkingDisplacementComponent"/> on the organ entity.
 /// </summary>
-public sealed class CEMarkingDisplacementSystem : EntitySystem
+public sealed class MarkingDisplacementSystem : EntitySystem
 {
     [Dependency] private readonly DisplacementMapSystem _displacement = default!;
     [Dependency] private readonly SpriteSystem _sprite = default!;
