@@ -2,7 +2,6 @@ using System.IO;
 using System.Linq;
 using Content.Shared.Actions;
 using Content.Shared.Actions.Components;
-using Content.Shared.Charges.Systems;
 using Content.Shared.Mapping;
 using Content.Shared.Maps;
 using JetBrains.Annotations;
@@ -27,7 +26,6 @@ namespace Content.Client.Actions
     {
         public delegate void OnActionReplaced(EntityUid actionId);
 
-        [Dependency] private SharedChargesSystem _sharedCharges = default!;
         [Dependency] private IPlayerManager _playerManager = default!;
         [Dependency] private IResourceManager _resources = default!;
         [Dependency] private MetaDataSystem _metaData = default!;
@@ -68,8 +66,6 @@ namespace Content.Client.Actions
 
         public override void UpdateAction(Entity<ActionComponent> ent)
         {
-            // TODO: Decouple this.
-            ent.Comp.IconColor = _sharedCharges.GetCurrentCharges(ent.Owner) == 0 ? ent.Comp.DisabledIconColor : ent.Comp.OriginalIconColor;
             base.UpdateAction(ent);
             if (_playerManager.LocalEntity != ent.Comp.AttachedEntity)
                 return;
