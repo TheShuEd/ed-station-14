@@ -15,15 +15,15 @@ namespace Content.Server.Weather;
 
 public sealed partial class WeatherSystem
 {
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
-    [Dependency] private readonly IMapManager _mapManager = default!;
-    [Dependency] private readonly EntityLookupSystem _lookup = default!;
-    [Dependency] private readonly MapSystem _mapSystem = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
+    [Dependency] private IMapManager _mapManager = default!;
+    [Dependency] private EntityLookupSystem _lookup = default!;
+    [Dependency] private MapSystem _mapSystem = default!;
+    [Dependency] private IRobustRandom _random = default!;
 
-    private EntityQuery<MapComponent> _mapCompQuery;
-    private EntityQuery<RoofComponent> _roofQuery;
-    private EntityQuery<TransformComponent> _xformQuery;
+    [Dependency] private EntityQuery<MapComponent> _mapCompQuery = default!;
+    [Dependency] private EntityQuery<RoofComponent> _roofQuery = default!;
+    [Dependency] private EntityQuery<TransformComponent> _xformQuery = default!;
 
     private int _maxAffectedPerTick;
     private int _maxTilesScannedPerTick;
@@ -40,10 +40,6 @@ public sealed partial class WeatherSystem
 
     private void InitEffects()
     {
-        _mapCompQuery = GetEntityQuery<MapComponent>();
-        _roofQuery = GetEntityQuery<RoofComponent>();
-        _xformQuery = GetEntityQuery<TransformComponent>();
-
         SubscribeLocalEvent<WeatherEffectsComponent, ComponentInit>(OnWeatherEffectsInit);
         SubscribeLocalEvent<WeatherEntityEffectComponent, ComponentShutdown>(OnWeatherEffectsShutdown);
 
