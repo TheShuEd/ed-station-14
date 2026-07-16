@@ -6,10 +6,10 @@ using Robust.Shared.Random;
 
 namespace Content.Server.StationEvents.Events;
 
-public sealed class WeatherRule : StationEventSystem<WeatherRuleComponent>
+public sealed partial class WeatherRule : StationEventSystem<WeatherRuleComponent>
 {
-    [Dependency] private readonly WeatherSystem _weather = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private WeatherSystem _weather = default!;
+    [Dependency] private IRobustRandom _random = default!;
 
     protected override void Started(EntityUid uid, WeatherRuleComponent component, GameRuleComponent gameRule, GameRuleStartedEvent args)
     {
@@ -25,7 +25,7 @@ public sealed class WeatherRule : StationEventSystem<WeatherRuleComponent>
 
         if (grid is null)
             return;
-        
+
         var map = Transform(grid.Value).MapID;
         var duration = _random.Next(component.MinDuration, component.MaxDuration);
         _weather.TryAddWeather(map, component.Weather, out _, duration);
