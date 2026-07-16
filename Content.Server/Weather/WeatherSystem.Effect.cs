@@ -16,7 +16,6 @@ namespace Content.Server.Weather;
 public sealed partial class WeatherSystem
 {
     [Dependency] private IConfigurationManager _cfg = default!;
-    [Dependency] private IMapManager _mapManager = default!;
     [Dependency] private EntityLookupSystem _lookup = default!;
     [Dependency] private MapSystem _mapSystem = default!;
     [Dependency] private IRobustRandom _random = default!;
@@ -89,7 +88,7 @@ public sealed partial class WeatherSystem
         state.CurrentGridIndex = 0;
         state.TileEnumeratorValid = false;
 
-        foreach (var grid in _mapManager.GetAllGrids(mapId))
+        foreach (var grid in _mapSystem.GetAllGrids(mapId))
         {
             state.Grids.Add(grid);
         }
