@@ -67,7 +67,7 @@ public abstract partial class SharedBorgSystem
             DisableAllModules(chassis.AsNullable());
 
         _powerCell.SetDrawEnabled(chassis.Owner, active);
-        _movementSpeedModifier.RefreshMovementSpeedModifiers(chassis);
+        _movementSpeedModifier.RefreshMovementSpeedModifiers(chassis.Owner);
 
         var sound = active ? chassis.Comp.ActivateSound : chassis.Comp.DeactivateSound;
         // If a user is given predict the audio for them, if not keep it unpredicted.
@@ -236,8 +236,9 @@ public abstract partial class SharedBorgSystem
             }
         }
 
-        var attemptEv = new BorgModuleInsertAttemptEvent(module.Owner);
+        var attemptEv = new BorgModuleInsertAttemptEvent(module.Owner, chassis.Owner);
         RaiseLocalEvent(chassis, ref attemptEv);
+        RaiseLocalEvent(module, ref attemptEv);
 
         if (attemptEv.Cancelled)
         {
