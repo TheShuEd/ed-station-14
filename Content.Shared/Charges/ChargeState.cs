@@ -6,7 +6,7 @@ namespace Content.Shared.Charges;
 ///     Appearance data keys for entities with LimitedCharges.
 /// </summary>
 [Serializable, NetSerializable]
-public enum ChargesVisuals : byte
+public enum ChargeState : byte
 {
     /// <summary>True if current charges > 0.</summary>
     HasCharges,
