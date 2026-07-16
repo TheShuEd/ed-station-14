@@ -25,7 +25,7 @@ public sealed class ActionButton : Control, IEntityControl
 
     private IEntityManager _entities;
     private IPlayerManager _player;
-    private SpriteSystem? _spriteSys;
+    private ActionsSystem? _actionsSys;
     private ActionUIController? _controller;
     private bool _beingHovered;
     private bool _depressed;
@@ -61,13 +61,12 @@ public sealed class ActionButton : Control, IEntityControl
     public event Action<GUIBoundKeyEventArgs, ActionButton>? ActionUnpressed;
     public event Action<ActionButton>? ActionFocusExited;
 
-    public ActionButton(IEntityManager entities, SpriteSystem? spriteSys = null, ActionUIController? controller = null)
+    public ActionButton(IEntityManager entities, ActionUIController? controller = null)
     {
         // TODO why is this constructor so slooooow. The rest of the code is fine
 
         _entities = entities;
         _player = IoCManager.Resolve<IPlayerManager>();
-        _spriteSys = spriteSys;
         _controller = controller;
 
         MouseFilter = MouseFilterMode.Pass;
@@ -404,11 +403,8 @@ public sealed class ActionButton : Control, IEntityControl
         if (action.Toggled || _controller.SelectingTargetFor == Action?.Owner)
         {
             // when there's a toggle sprite, we're showing that sprite instead of highlighting this slot
-            _spriteSys ??= _entities.System<SpriteSystem>();
-            var hasToggleIcon = _entities.TryGetComponent(Action?.Owner, out SpriteComponent? actionSprite)
-                && _spriteSys.LayerExists((Action!.Value.Owner, actionSprite), ActionVisuals.IconToggled);
-
-            SetOnlyStylePseudoClass(hasToggleIcon
+            _actionsSys ??= _entities.System<ActionsSystem>();
+            SetOnlyStylePseudoClass(_actionsSys.HasToggleIcon(Action?.Owner)
                 ? ContainerButton.StylePseudoClassNormal
                 : ContainerButton.StylePseudoClassPressed);
             return;
