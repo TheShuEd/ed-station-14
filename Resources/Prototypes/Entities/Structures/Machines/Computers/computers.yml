@@ -479,8 +479,6 @@
       state: telesci_key
     - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
       state: generic_panel_open
-  - type: ApcPowerReceiver
-    powerLoad: 500
   - type: PointLight
     radius: 1.5
     energy: 1.6
