@@ -1,5 +1,5 @@
 - type: entity
-  parent: StationTeleporter
+  parent: BaseStructure
   id: Gateway
   name: gateway
   description: A mysterious gateway built by unknown hands, it allows for faster than light travel to far-flung locations.
@@ -27,6 +27,11 @@
         portal:
           True: { visible: true }
           False: { visible: false }
+  - type: InteractionOutline
+  - type: Physics
+    bodyType: Static
+  - type: Transform
+    noRot: true
   - type: Fixtures
     fixtures:
       portalFixture:
@@ -38,6 +43,20 @@
         layer:
         - WallLayer
         hard: false
+  - type: Appearance
   - type: StationTeleporter
     portalLayerMap: "portal"
     autoLinkKey: Nanotrasen
+  - type: Portal
+    randomTeleport: false
+    canTeleportToOtherMaps: true
+  - type: PointLight
+    enabled: true
+    radius: 3
+    energy: 1
+  - type: AmbientSound
+    enabled: true
+    sound:
+      path: /Audio/Ambience/ambi_gateway.ogg
+    range: 5
+    volume: 8

@@ -1,10 +1,12 @@
 - type: entity
-  parent: [ BaseMachinePowered ]
+  parent: [ ConstructibleMachine, BaseMachinePowered ]
   id: StationTeleporter
   name: teleporter
   description: The peak of bluespace technology. A giant teleporter that allows you to travel vast distances in the blink of an eye.
   suffix: Unknown Coordinates, Without Autolink
   components:
+  - type: Machine
+    board: StationTeleporterMachineCircuitboard
   - type: Sprite
     noRot: true
     sprite: Structures/Machines/station_teleporter.rsi
