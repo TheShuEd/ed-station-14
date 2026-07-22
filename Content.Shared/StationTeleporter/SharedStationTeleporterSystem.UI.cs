@@ -21,7 +21,7 @@ public abstract partial class SharedStationTeleporterSystem
     private void OnUIPortalClicked(Entity<StationTeleporterConsoleComponent> ent,
         ref StationTeleporterClickMessage args)
     {
-        ConsoleInteract(ent, ref args);
+        ToggleTeleporterLink(ent, ref args);
         UpdateUserInterface(ent);
     }
 
@@ -80,7 +80,7 @@ public abstract partial class SharedStationTeleporterSystem
 
         cachedTeleporters.Add(chipComp.ConnectedTeleporter.Value);
 
-        var teleporterName = LabelQuery.TryComp(chipComp.ConnectedTeleporter.Value, out var label)
+        var teleporterName = _labelQuery.TryComp(chipComp.ConnectedTeleporter.Value, out var label)
             ? label.CurrentLabel ?? Loc.GetString("teleporter-name-unknown")
             : Loc.GetString("teleporter-name-unknown");
 

@@ -59,8 +59,10 @@ public sealed partial class LinkedEntitySystem : EntitySystem
 
         if (firstLink.LinkedEntities.Add(second) && secondLink.LinkedEntities.Add(first))
         {
-            RaiseLocalEvent(first, new LinkedEntityChangedEvent(firstLink.LinkedEntities));
-            RaiseLocalEvent(second, new LinkedEntityChangedEvent(secondLink.LinkedEntities));
+            var firstEv = new LinkedEntityChangedEvent(firstLink.LinkedEntities);
+            RaiseLocalEvent(first, ref firstEv);
+            var secondEv = new LinkedEntityChangedEvent(secondLink.LinkedEntities);
+            RaiseLocalEvent(second, ref secondEv);
             return true;
         }
 
@@ -82,7 +84,8 @@ public sealed partial class LinkedEntitySystem : EntitySystem
 
         if (firstLink.LinkedEntities.Add(target))
         {
-            RaiseLocalEvent(source, new LinkedEntityChangedEvent(firstLink.LinkedEntities));
+            var ev = new LinkedEntityChangedEvent(firstLink.LinkedEntities);
+            RaiseLocalEvent(source, ref ev);
             return true;
         }
 
@@ -117,14 +120,16 @@ public sealed partial class LinkedEntitySystem : EntitySystem
         Dirty(first, firstLink);
         Dirty(second, secondLink);
 
+        var firstEv = new LinkedEntityChangedEvent(firstLink.LinkedEntities);
+        RaiseLocalEvent(first, ref firstEv);
+        var secondEv = new LinkedEntityChangedEvent(secondLink.LinkedEntities);
+        RaiseLocalEvent(second, ref secondEv);
+
         if (firstLink.LinkedEntities.Count == 0 && firstLink.DeleteOnEmptyLinks)
             QueueDel(first);
 
         if (secondLink.LinkedEntities.Count == 0 && secondLink.DeleteOnEmptyLinks)
             QueueDel(second);
-
-        RaiseLocalEvent(first, new LinkedEntityChangedEvent(firstLink.LinkedEntities));
-        RaiseLocalEvent(second, new LinkedEntityChangedEvent(secondLink.LinkedEntities));
 
         return success;
     }
@@ -152,12 +157,5 @@ public sealed partial class LinkedEntitySystem : EntitySystem
     #endregion
 }
 
-public sealed class LinkedEntityChangedEvent : EntityEventArgs
-{
-    public HashSet<EntityUid> NewLinks;
-
-    public LinkedEntityChangedEvent(HashSet<EntityUid> newLinks)
-    {
-        NewLinks = newLinks;
-    }
-}
+[ByRefEvent]
+public readonly record struct LinkedEntityChangedEvent(HashSet<EntityUid> NewLinks);

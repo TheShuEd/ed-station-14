@@ -1,6 +1,6 @@
 using Content.Shared.StationTeleporter;
+using Content.Shared.StationTeleporter.Components;
 using Robust.Client.GameObjects;
-using StationTeleporterComponent = Content.Shared.StationTeleporter.Components.StationTeleporterComponent;
 
 namespace Content.Client.StationTeleporter;
 

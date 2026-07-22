@@ -27,7 +27,7 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private UseDelaySystem _useDelay = default!;
 
-    [Dependency] protected EntityQuery<LabelComponent> LabelQuery = default!;
+    [Dependency] private EntityQuery<LabelComponent> _labelQuery = default!;
 
     public override void Initialize()
     {
@@ -59,11 +59,9 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
         }
     }
 
-    private void ConsoleInteract(Entity<StationTeleporterConsoleComponent> ent, ref StationTeleporterClickMessage args)
+    private void ToggleTeleporterLink(Entity<StationTeleporterConsoleComponent> ent, ref StationTeleporterClickMessage args)
     {
-        var teleporter = GetEntity(args.Teleporter);
-
-        if (teleporter is null)
+        if (!TryGetEntity(args.Teleporter, out var teleporter))
             return;
 
         if (!_power.IsPowered(teleporter.Value))
@@ -71,8 +69,8 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
 
         TryComp<StationTeleporterComponent>(teleporter.Value, out var stationTeleporterComponent);
 
-        if (_link.GetLink(teleporter.Value,
-                out var linkedTeleporter)) //If the pressed teleporter is linked to another - cut this connection.
+        if (_link.GetLink(teleporter.Value, out var linkedTeleporter))
+            //If the pressed teleporter is linked to another - cut this connection.
         {
             _link.TryUnlink(teleporter.Value, linkedTeleporter.Value);
             if (stationTeleporterComponent is not null)
@@ -84,7 +82,7 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
             {
                 ent.Comp.SelectedTeleporter = teleporter;
             }
-            else // And we have a selected teleporter - tie them together.
+            else //If we have selected teleporter - tie them togather
             {
                 if (ent.Comp.SelectedTeleporter != teleporter.Value &&
                     _power.IsPowered(ent.Comp.SelectedTeleporter.Value))
@@ -132,7 +130,7 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
     {
         chip.Comp.ConnectedTeleporter = teleporter;
 
-        chip.Comp.ConnectedName = LabelQuery.TryComp(teleporter, out var label)
+        chip.Comp.ConnectedName = _labelQuery.TryComp(teleporter, out var label)
             ? label.CurrentLabel ?? Loc.GetString("teleporter-name-unknown")
             : Loc.GetString("teleporter-name-unknown");
 
