@@ -37,15 +37,17 @@ public abstract partial class SharedStationTeleporterSystem
             EnsureComp<NavMapComponent>(xform.GridUid.Value);
 
         //Send data
-        List<StationTeleporterStatus> teleportersData = new();
-        var cachedTeleporters = new List<EntityUid>(); //Prevent UI teleporters dublication
+        var teleportersData = new List<StationTeleporterStatus>();
+        var cachedTeleporters = new HashSet<EntityUid>(); //Prevent UI teleporters duplication
 
         if (_container.TryGetContainer(ent, ent.Comp.ChipStorageName, out var container))
         {
             foreach (var entity in container.ContainedEntities)
             {
-                AddTeleportersFromChips(entity, ref teleportersData, ref cachedTeleporters);
-                AddPortalsFromHandTeleporter(entity, ref teleportersData, ref cachedTeleporters);
+                if (TryComp<TeleporterChipComponent>(entity, out var chipComp))
+                    AddTeleporterFromChip((entity, chipComp), teleportersData, cachedTeleporters);
+                else if (TryComp<HandTeleporterComponent>(entity, out var handTeleporterComp))
+                    AddPortalsFromHandTeleporter((entity, handTeleporterComp), teleportersData, cachedTeleporters);
             }
         }
 
@@ -54,80 +56,50 @@ public abstract partial class SharedStationTeleporterSystem
             new StationTeleporterState(teleportersData, GetNetEntity(ent.Comp.SelectedTeleporter)));
     }
 
-    private void AddTeleportersFromChips(EntityUid ent,
-        ref List<StationTeleporterStatus> teleportersData,
-        ref List<EntityUid> cachedTeleporters)
+    private void AddTeleporterFromChip(Entity<TeleporterChipComponent> chip, List<StationTeleporterStatus> teleportersData, HashSet<EntityUid> cachedTeleporters)
     {
         //Teleporter chips get portal links
-        if (!TryComp<TeleporterChipComponent>(ent, out var chipComp))
+        if (Deleted(chip.Comp.ConnectedTeleporter))
             return;
 
-        if (Deleted(chipComp.ConnectedTeleporter))
+        if (chip.Comp.ConnectedTeleporter is null)
             return;
 
-        if (chipComp.ConnectedTeleporter is null)
-            return;
-
-        if (cachedTeleporters.Contains(chipComp.ConnectedTeleporter.Value))
-            return;
-
-        var powered = _power.IsPowered(chipComp.ConnectedTeleporter.Value);
-
-        _link.GetLink(chipComp.ConnectedTeleporter.Value, out var linkedTeleporter);
-        EntityCoordinates? linkCoord = null;
-        if (linkedTeleporter is not null)
-            linkCoord = Transform(linkedTeleporter.Value).Coordinates;
-
-        cachedTeleporters.Add(chipComp.ConnectedTeleporter.Value);
-
-        var teleporterName = _labelQuery.TryComp(chipComp.ConnectedTeleporter.Value, out var label)
+        var teleporterName = _labelQuery.TryComp(chip.Comp.ConnectedTeleporter.Value, out var label)
             ? label.CurrentLabel ?? Loc.GetString("teleporter-name-unknown")
             : Loc.GetString("teleporter-name-unknown");
 
-        teleportersData.Add(
-            new(GetNetEntity(chipComp.ConnectedTeleporter.Value),
-                GetNetCoordinates(Transform(chipComp.ConnectedTeleporter.Value).Coordinates),
-                GetNetCoordinates(linkCoord),
-                Loc.GetString(teleporterName),
-                powered));
+        AddTeleporterStatus(chip.Comp.ConnectedTeleporter.Value, Loc.GetString(teleporterName), teleportersData, cachedTeleporters);
     }
 
-    private void AddPortalsFromHandTeleporter(EntityUid ent,
-        ref List<StationTeleporterStatus> teleportersData,
-        ref List<EntityUid> cachedTeleporters)
+    private void AddPortalsFromHandTeleporter(Entity<HandTeleporterComponent> handTeleporter, List<StationTeleporterStatus> teleportersData, HashSet<EntityUid> cachedTeleporters)
     {
         //RD handheld teleporter portals
-        if (!TryComp<HandTeleporterComponent>(ent, out var handTeleporter))
-            return;
+        if (handTeleporter.Comp.FirstPortal is not null && Exists(handTeleporter.Comp.FirstPortal))
+            AddTeleporterStatus(handTeleporter.Comp.FirstPortal.Value, Loc.GetString("teleporter-name-rd-first"), teleportersData, cachedTeleporters);
 
-        //First portal
-        if (handTeleporter.FirstPortal is not null && Exists(handTeleporter.FirstPortal))
-            AddPortal(handTeleporter.FirstPortal.Value, Loc.GetString("teleporter-name-rd-first"), ref teleportersData, ref cachedTeleporters);
-
-
-        //Second portal
-        if (handTeleporter.SecondPortal is not null && Exists(handTeleporter.SecondPortal))
-            AddPortal(handTeleporter.SecondPortal.Value, Loc.GetString("teleporter-name-rd-second"), ref teleportersData, ref cachedTeleporters);
+        if (handTeleporter.Comp.SecondPortal is not null && Exists(handTeleporter.Comp.SecondPortal))
+            AddTeleporterStatus(handTeleporter.Comp.SecondPortal.Value, Loc.GetString("teleporter-name-rd-second"), teleportersData, cachedTeleporters);
     }
 
-    private void AddPortal(EntityUid ent,
-        string name,
-        ref List<StationTeleporterStatus> teleportersData,
-        ref List<EntityUid> cachedTeleporters)
+    /// <summary>
+    /// Builds and appends a <see cref="StationTeleporterStatus"/> entry for the given teleporter, unless it was already added.
+    /// </summary>
+    private void AddTeleporterStatus(EntityUid teleporter, string name, List<StationTeleporterStatus> teleportersData, HashSet<EntityUid> cachedTeleporters)
     {
-        if (cachedTeleporters.Contains(ent))
+        if (!cachedTeleporters.Add(teleporter))
             return;
 
-        _link.GetLink(ent, out var linkedTeleporter);
+        _link.GetLink(teleporter, out var linkedTeleporter);
         EntityCoordinates? linkCoord = null;
         if (linkedTeleporter is not null)
             linkCoord = Transform(linkedTeleporter.Value).Coordinates;
 
         teleportersData.Add(
-            new StationTeleporterStatus(GetNetEntity(ent),
-                GetNetCoordinates(Transform(ent).Coordinates),
+            new StationTeleporterStatus(GetNetEntity(teleporter),
+                GetNetCoordinates(Transform(teleporter).Coordinates),
                 GetNetCoordinates(linkCoord),
                 name,
-                true));
+                _power.IsPowered(teleporter)));
     }
 }

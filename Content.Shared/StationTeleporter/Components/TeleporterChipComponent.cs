@@ -4,7 +4,7 @@ using Robust.Shared.GameStates;
 namespace Content.Shared.StationTeleporter.Components;
 
 /// <summary>
-/// Stores a reference to a specific teleporter. Can be inserted into the teleporter control console so that the console can control this teleporter
+/// Stores a reference to a specific teleporter. Can be inserted into the teleporter control console so that the console can control this teleporter.
 /// </summary>
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 [Access(typeof(SharedStationTeleporterSystem))]
@@ -17,11 +17,14 @@ public sealed partial class TeleporterChipComponent : Component
     public EntityUid? ConnectedTeleporter;
 
     /// <summary>
-    /// The name of the teleporter the chip has synced is copied into this field. This information is used when examining the chip.
+    /// The already-localized name of the teleporter this chip is synced with, copied here for use when examining the chip.
     /// </summary>
     [DataField, AutoNetworkedField]
     public string ConnectedName = string.Empty;
 
+    /// <summary>
+    /// The sound played when this chip records a teleporter's coordinates.
+    /// </summary>
     [DataField]
     public SoundSpecifier RecordSound = new SoundPathSpecifier("/Audio/Machines/high_tech_confirm.ogg")
     {

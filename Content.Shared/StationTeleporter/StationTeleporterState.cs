@@ -1,3 +1,4 @@
+using Content.Shared.StationTeleporter.Components;
 using Robust.Shared.Map;
 using Robust.Shared.Serialization;
 
@@ -46,7 +47,7 @@ public sealed class StationTeleporterClickMessage : BoundUserInterfaceMessage
     public NetEntity? Teleporter;
 
     /// <summary>
-    /// Called when the client clicks on any active Teleporter on the StationTeleporterConsoleComponent
+    /// Sent when the client clicks on any active teleporter shown by a <see cref="StationTeleporterConsoleComponent"/>.
     /// </summary>
     public StationTeleporterClickMessage(NetEntity? teleporter)
     {

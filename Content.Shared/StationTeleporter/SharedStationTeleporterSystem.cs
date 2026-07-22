@@ -1,4 +1,3 @@
-using Content.Shared.Audio;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Labels.Components;
@@ -14,6 +13,10 @@ using Robust.Shared.Timing;
 
 namespace Content.Shared.StationTeleporter;
 
+/// <summary>
+/// Handles <see cref="StationTeleporterComponent"/>, <see cref="StationTeleporterConsoleComponent"/> and
+/// <see cref="TeleporterChipComponent"/> - linking teleporters together via chips recorded at a control console.
+/// </summary>
 public abstract partial class SharedStationTeleporterSystem : EntitySystem
 {
     [Dependency] private SharedAmbientSoundSystem _ambient = default!;
@@ -73,8 +76,7 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
             //If the pressed teleporter is linked to another - cut this connection.
         {
             _link.TryUnlink(teleporter.Value, linkedTeleporter.Value);
-            if (stationTeleporterComponent is not null)
-                stationTeleporterComponent.LastLink = null;
+            stationTeleporterComponent?.LastLink = null;
         }
         else //If the pressed teleporter is not connected to anything...
         {
@@ -87,16 +89,15 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
                 if (ent.Comp.SelectedTeleporter != teleporter.Value &&
                     _power.IsPowered(ent.Comp.SelectedTeleporter.Value))
                 {
-                    if (_link.TryLink(teleporter.Value, ent.Comp.SelectedTeleporter.Value))
-                    {
-                        if (stationTeleporterComponent is not null)
-                            stationTeleporterComponent.LastLink = ent.Comp.SelectedTeleporter.Value;
-                    }
+                    // Set the console's portal color on both sides before linking, so OnLinkedChanged
+                    // can pick it up when it reacts to the link actually succeeding.
+                    stationTeleporterComponent?.PortalColor = ent.Comp.PortalColor;
 
-                    _appearance.SetData(teleporter.Value, TeleporterPortalVisuals.Color, ent.Comp.PortalColor);
-                    _appearance.SetData(ent.Comp.SelectedTeleporter.Value,
-                        TeleporterPortalVisuals.Color,
-                        ent.Comp.PortalColor);
+                    if (TryComp<StationTeleporterComponent>(ent.Comp.SelectedTeleporter.Value, out var selectedComponent))
+                        selectedComponent.PortalColor = ent.Comp.PortalColor;
+
+                    if (_link.TryLink(teleporter.Value, ent.Comp.SelectedTeleporter.Value))
+                        stationTeleporterComponent?.LastLink = ent.Comp.SelectedTeleporter.Value;
                 }
 
                 ent.Comp.SelectedTeleporter = null;
@@ -109,9 +110,9 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
         if (args.Handled)
             return;
 
-        if (TryComp<UseDelayComponent>(args.Used, out var useDelayComp) &&
-            _useDelay.IsDelayed((args.Used, useDelayComp)))
+        if (TryComp<UseDelayComponent>(args.Used, out var useDelayComp) && _useDelay.IsDelayed((args.Used, useDelayComp)))
             return;
+
         _useDelay.TryResetDelay(args.Used);
 
         if (!TryComp<TeleporterChipComponent>(args.Used, out var chip))
@@ -149,6 +150,7 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
         var xform = Transform(ent);
         if (args.NewLinks.Count > 0)
         {
+            _appearance.SetData(ent, TeleporterPortalVisuals.Color, ent.Comp.PortalColor);
             _ambient.SetAmbience(ent, true);
             Audio.PlayPvs(ent.Comp.LinkSound, xform.Coordinates);
         }

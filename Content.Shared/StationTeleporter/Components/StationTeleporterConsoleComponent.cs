@@ -4,20 +4,20 @@ using Robust.Shared.Prototypes;
 namespace Content.Shared.StationTeleporter.Components;
 
 /// <summary>
-/// Console that allows you to manage the StationTeleporterComponent
+/// Console that allows you to manage <see cref="StationTeleporterComponent"/>.
 /// </summary>
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentPause]
 [Access(typeof(SharedStationTeleporterSystem))]
 public sealed partial class StationTeleporterConsoleComponent : Component
 {
     /// <summary>
-    /// When initialized, teleporters can automatically generate chips in this console if they have matching AutoLinkKey
+    /// When initialized, teleporters can automatically generate chips in this console if they have a matching AutoLinkKey.
     /// </summary>
     [DataField]
     public string? AutoLinkKey = null;
 
     /// <summary>
-    /// It is these chips that will appear in the console and automatically communicate with the teleporters
+    /// These are the chips that will appear in the console and automatically communicate with the teleporters.
     /// </summary>
     [DataField]
     public EntProtoId? AutoLinkChipsProto = "TeleporterChipBlank";
@@ -35,14 +35,20 @@ public sealed partial class StationTeleporterConsoleComponent : Component
     public Color PortalColor = Color.White;
 
     /// <summary>
-    /// A storage from which all coordinate chips are scanned
+    /// The storage container from which all coordinate chips are scanned.
     /// </summary>
     [DataField]
     public string ChipStorageName = "storagebase";
 
+    /// <summary>
+    /// The next time the console's UI state will be recalculated and sent to clients.
+    /// </summary>
     [DataField, AutoPausedField]
     public TimeSpan NextUpdateTime = TimeSpan.Zero;
 
+    /// <summary>
+    /// How often the console's UI state is recalculated while its UI is open.
+    /// </summary>
     [DataField]
     public TimeSpan UpdateFrequency = TimeSpan.FromSeconds(1f);
 

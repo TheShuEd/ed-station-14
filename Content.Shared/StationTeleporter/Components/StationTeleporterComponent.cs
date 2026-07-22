@@ -3,7 +3,7 @@ using Robust.Shared.Audio;
 namespace Content.Shared.StationTeleporter.Components;
 
 /// <summary>
-/// Allows an entity to be displayed and managed using StationTeleporterConsole
+/// Allows an entity to be displayed and managed using <see cref="StationTeleporterConsoleComponent"/>.
 /// </summary>
 [RegisterComponent]
 [Access(typeof(SharedStationTeleporterSystem))]
@@ -44,4 +44,11 @@ public sealed partial class StationTeleporterComponent : Component
     /// </summary>
     [DataField]
     public string? PortalLayerMap;
+
+    /// <summary>
+    /// Color applied to the portal effect once this teleporter is linked. Set by the console that links it
+    /// (e.g. Syndicate consoles use a red tint) and picked up by <see cref="SharedStationTeleporterSystem"/> when the link succeeds.
+    /// </summary>
+    [DataField]
+    public Color PortalColor = Color.White;
 }
