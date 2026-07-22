@@ -4,9 +4,10 @@ using StationTeleporterComponent = Content.Shared.StationTeleporter.Components.S
 
 namespace Content.Client.StationTeleporter;
 
-public sealed class StationTeleporterSystem : SharedStationTeleporterSystem
+public sealed partial class StationTeleporterSystem : SharedStationTeleporterSystem
 {
-    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
+    [Dependency] private SpriteSystem _sprite = default!;
 
     public override void Initialize()
     {
@@ -26,9 +27,10 @@ public sealed class StationTeleporterSystem : SharedStationTeleporterSystem
         if (!TryComp<SpriteComponent>(ent, out var sprite))
             return;
 
-        if (!sprite.LayerMapTryGet(ent.Comp.PortalLayerMap, out var index))
+
+        if (!_sprite.LayerMapTryGet(ent.Owner, ent.Comp.PortalLayerMap, out var index, false))
             return;
 
-        sprite.LayerSetColor(index, newColor);
+        _sprite.LayerSetColor(ent.Owner, index, newColor);
     }
 }

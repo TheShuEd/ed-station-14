@@ -3,7 +3,7 @@ using Content.Shared.StationTeleporter.Components;
 
 namespace Content.Server.StationTeleporter.Systems;
 
-public sealed class StationTeleporterSystem : SharedStationTeleporterSystem
+public sealed partial class StationTeleporterSystem : SharedStationTeleporterSystem
 {
     public override void Initialize()
     {
