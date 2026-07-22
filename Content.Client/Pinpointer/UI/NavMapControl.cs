@@ -193,6 +193,12 @@ public partial class NavMapControl : MapGridControl
         _recenter.Disabled = false;
     }
 
+    public void ClearTrackedData()
+    {
+        TrackedCoordinates.Clear();
+        TrackedEntities.Clear();
+    }
+
     protected override void KeyBindUp(GUIBoundKeyEventArgs args)
     {
         base.KeyBindUp(args);

@@ -4,6 +4,7 @@ using Robust.Client.GameObjects;
 
 namespace Content.Client.StationTeleporter;
 
+/// <inheritdoc/>
 public sealed partial class StationTeleporterSystem : SharedStationTeleporterSystem
 {
     [Dependency] private SharedAppearanceSystem _appearance = default!;
@@ -23,10 +24,6 @@ public sealed partial class StationTeleporterSystem : SharedStationTeleporterSys
 
         if (!_appearance.TryGetData<Color>(ent, TeleporterPortalVisuals.Color, out var newColor))
             return;
-
-        if (!TryComp<SpriteComponent>(ent, out var sprite))
-            return;
-
 
         if (!_sprite.LayerMapTryGet(ent.Owner, ent.Comp.PortalLayerMap, out var index, false))
             return;

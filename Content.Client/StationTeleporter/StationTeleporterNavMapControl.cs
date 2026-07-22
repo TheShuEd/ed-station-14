@@ -6,11 +6,11 @@ namespace Content.Client.StationTeleporter;
 
 public sealed partial class StationTeleporterNavMapControl : NavMapControl
 {
-    public HashSet<(Vector2, Vector2)> LinkedTeleportersCoordinates = new();
+    private readonly HashSet<(Vector2, Vector2)> _linkedTeleportersCoordinates = new();
 
     private readonly SharedTransformSystem _transformSystem;
 
-    public StationTeleporterNavMapControl() : base()
+    public StationTeleporterNavMapControl()
     {
         _transformSystem = EntManager.System<SharedTransformSystem>();
 
@@ -23,13 +23,23 @@ public sealed partial class StationTeleporterNavMapControl : NavMapControl
         PostWallDrawingAction += DrawAllTeleporterLinks;
     }
 
+    public void AddTeleporterLink(Vector2 first, Vector2 second)
+    {
+        _linkedTeleportersCoordinates.Add((first, second));
+    }
+
+    public void ClearTeleporterLinks()
+    {
+        _linkedTeleportersCoordinates.Clear();
+    }
+
     private void DrawAllTeleporterLinks(DrawingHandleScreen handle)
     {
-        foreach (var link in LinkedTeleportersCoordinates)
-        {
-            if (Xform is null)
-                continue;
+        if (Xform is null)
+            return;
 
+        foreach (var link in _linkedTeleportersCoordinates)
+        {
             var pos1 = Vector2.Transform(link.Item1, _transformSystem.GetInvWorldMatrix(Xform)) - GetOffset();
             pos1 = ScalePosition(new Vector2(pos1.X, -pos1.Y));
 

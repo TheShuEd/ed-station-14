@@ -26,7 +26,8 @@ public sealed class StationTeleporterConsoleBoundUserInterface(EntityUid owner, 
         }
 
         _menu = this.CreateWindow<StationTeleporterConsoleWindow>();
-        _menu.Set(this, stationName, gridUid);
+        _menu.Set(stationName, gridUid);
+        _menu.SendTeleporterLinkChangeAction += SendTeleporterLinkChangeMessage;
     }
 
     protected override void UpdateState(BoundUserInterfaceState state)

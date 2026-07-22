@@ -14,6 +14,7 @@ teleporter-console-user-interface-cut-connection = Cut connection
 teleporter-console-user-interface-no-power = Unpowered
 
 teleporter-console-user-interface-no-teleporters = No teleporters
+teleporter-console-user-interface-unknown-station = Unknown station
 teleporter-console-user-interface-flavor-left = In the event of bluespace gate instability, we are not responsible for your disintegration or teleportation to ashlands.
 teleporter-console-user-interface-flavor-right = v0.666
 
