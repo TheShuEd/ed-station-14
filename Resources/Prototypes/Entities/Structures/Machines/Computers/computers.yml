@@ -504,6 +504,7 @@
     grid:
     - 0,0,4,2
     maxItemSize: Small
+    openOnActivate: false
     storageOpenSound: /Audio/Machines/door_lock_off.ogg
     storageCloseSound: /Audio/Machines/door_lock_on.ogg
     storageInsertSound: /Audio/Machines/id_insert.ogg

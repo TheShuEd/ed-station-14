@@ -71,14 +71,15 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
         if (!_power.IsPowered(teleporter.Value))
             return;
 
-        if (!TryComp<StationTeleporterComponent>(teleporter.Value, out var stationTeleporterComponent))
-            return;
+        // Not every linkable teleporter is a StationTeleporter (e.g. hand teleporter portals aren't),
+        // so this component is optional here - only used for its LastLink/PortalColor bookkeeping.
+        TryComp<StationTeleporterComponent>(teleporter.Value, out var stationTeleporterComponent);
 
         if (_link.GetLink(teleporter.Value, out var linkedTeleporter))
             //If the pressed teleporter is linked to another - cut this connection.
         {
             _link.TryUnlink(teleporter.Value, linkedTeleporter.Value);
-            stationTeleporterComponent.LastLink = null;
+            stationTeleporterComponent?.LastLink = null;
         }
         else //If the pressed teleporter is not connected to anything...
         {
@@ -93,12 +94,12 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
                 {
                     // Set the console's portal color on both sides before linking, so OnLinkedChanged
                     // can pick it up when it reacts to the link actually succeeding.
-                    stationTeleporterComponent.PortalColor = ent.Comp.PortalColor;
+                    stationTeleporterComponent?.PortalColor = ent.Comp.PortalColor;
 
                     if (TryComp<StationTeleporterComponent>(ent.Comp.SelectedTeleporter.Value, out var selectedComponent))
                         selectedComponent.PortalColor = ent.Comp.PortalColor;
 
-                    if (_link.TryLink(teleporter.Value, ent.Comp.SelectedTeleporter.Value))
+                    if (_link.TryLink(teleporter.Value, ent.Comp.SelectedTeleporter.Value) && stationTeleporterComponent is not null)
                         stationTeleporterComponent.LastLink = ent.Comp.SelectedTeleporter.Value;
                 }
 

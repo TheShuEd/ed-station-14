@@ -69,7 +69,7 @@ public abstract partial class SharedStationTeleporterSystem
             ? label.CurrentLabel ?? Loc.GetString("teleporter-name-unknown")
             : Loc.GetString("teleporter-name-unknown");
 
-        AddTeleporterStatus(chip.Comp.ConnectedTeleporter.Value, Loc.GetString(teleporterName), teleportersData, cachedTeleporters);
+        AddTeleporterStatus(chip.Comp.ConnectedTeleporter.Value, teleporterName, teleportersData, cachedTeleporters);
     }
 
     private void AddPortalsFromHandTeleporter(Entity<HandTeleporterComponent> handTeleporter, List<StationTeleporterStatus> teleportersData, HashSet<EntityUid> cachedTeleporters)
