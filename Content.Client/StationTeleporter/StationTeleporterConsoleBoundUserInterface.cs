@@ -3,14 +3,10 @@ using Robust.Client.UserInterface;
 
 namespace Content.Client.StationTeleporter;
 
-public sealed class StationTeleporterConsoleBoundUserInterface : BoundUserInterface
+public sealed class StationTeleporterConsoleBoundUserInterface(EntityUid owner, Enum uiKey) : BoundUserInterface(owner, uiKey)
 {
     [ViewVariables]
     private StationTeleporterConsoleWindow? _menu;
-
-    public StationTeleporterConsoleBoundUserInterface(EntityUid owner, Enum uiKey) : base(owner, uiKey)
-    {
-    }
 
     protected override void Open()
     {
