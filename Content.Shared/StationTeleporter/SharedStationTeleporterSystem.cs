@@ -2,43 +2,38 @@ using Content.Shared.Audio;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Labels.Components;
-using Content.Shared.Pinpointer;
 using Content.Shared.Popups;
 using Content.Shared.Power;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.StationTeleporter.Components;
-using Content.Shared.Teleportation.Components;
 using Content.Shared.Teleportation.Systems;
 using Content.Shared.Timing;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
-using Robust.Shared.Map;
 using Robust.Shared.Timing;
 
 namespace Content.Shared.StationTeleporter;
 
 public abstract partial class SharedStationTeleporterSystem : EntitySystem
 {
-    [Dependency] private readonly SharedAmbientSoundSystem _ambient = default!;
-    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] protected readonly SharedAudioSystem Audio = default!;
-    [Dependency] private readonly SharedPowerReceiverSystem _power = default!;
-    [Dependency] private readonly LinkedEntitySystem _link = default!;
-    [Dependency] private readonly SharedContainerSystem _container = default!;
-    [Dependency] private readonly SharedUserInterfaceSystem _uiSystem = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly UseDelaySystem _useDelay = default!;
+    [Dependency] private SharedAmbientSoundSystem _ambient = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] protected SharedAudioSystem Audio = default!;
+    [Dependency] private SharedPowerReceiverSystem _power = default!;
+    [Dependency] private LinkedEntitySystem _link = default!;
+    [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SharedUserInterfaceSystem _uiSystem = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private UseDelaySystem _useDelay = default!;
 
-    protected EntityQuery<LabelComponent> LabelQuery;
+    [Dependency] protected EntityQuery<LabelComponent> LabelQuery = default!;
 
     public override void Initialize()
     {
         base.Initialize();
 
         InitializeUI();
-
-        LabelQuery = GetEntityQuery<LabelComponent>();
 
         SubscribeLocalEvent<StationTeleporterComponent, PowerChangedEvent>(OnPowerChanged);
         SubscribeLocalEvent<StationTeleporterComponent, LinkedEntityChangedEvent>(OnLinkedChanged);
@@ -126,7 +121,7 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
 
         ConnectChipToTeleporter((args.Used, chip), teleporter);
 
-        _popup.PopupPredicted(Loc.GetString("teleporter-console-chip-record"), teleporter, args.User);
+        _popup.PopupEntity(Loc.GetString("teleporter-console-chip-record"), teleporter, args.User);
         Audio.PlayPredicted(chip.RecordSound, args.Used, args.User);
 
         args.Handled = true;
