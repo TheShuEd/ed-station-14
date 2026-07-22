@@ -10,6 +10,8 @@ public sealed class StationTeleporterConsoleBoundUserInterface(EntityUid owner, 
 
     protected override void Open()
     {
+        base.Open();
+
         EntityUid? gridUid = null;
         var stationName = string.Empty;
 

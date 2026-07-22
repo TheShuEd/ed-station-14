@@ -16,7 +16,7 @@ namespace Content.Client.StationTeleporter;
 [GenerateTypedNameReferences]
 public sealed partial class StationTeleporterConsoleWindow : FancyWindow
 {
-    [Dependency] private readonly IEntityManager _entManager = default!;
+    [Dependency] private IEntityManager _entManager = default!;
     private readonly SpriteSystem _spriteSystem;
     private readonly SharedTransformSystem _xformSystem;
 
