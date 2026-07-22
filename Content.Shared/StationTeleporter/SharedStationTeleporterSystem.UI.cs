@@ -101,12 +101,12 @@ public abstract partial class SharedStationTeleporterSystem
             return;
 
         //First portal
-        if (handTeleporter.FirstPortal is not null && EntityManager.EntityExists(handTeleporter.FirstPortal))
+        if (handTeleporter.FirstPortal is not null && Exists(handTeleporter.FirstPortal))
             AddPortal(handTeleporter.FirstPortal.Value, Loc.GetString("teleporter-name-rd-first"), ref teleportersData, ref cachedTeleporters);
 
 
         //Second portal
-        if (handTeleporter.SecondPortal is not null && EntityManager.EntityExists(handTeleporter.SecondPortal))
+        if (handTeleporter.SecondPortal is not null && Exists(handTeleporter.SecondPortal))
             AddPortal(handTeleporter.SecondPortal.Value, Loc.GetString("teleporter-name-rd-second"), ref teleportersData, ref cachedTeleporters);
     }
 
