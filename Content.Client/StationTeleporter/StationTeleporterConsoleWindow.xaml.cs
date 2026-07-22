@@ -20,9 +20,9 @@ public sealed partial class StationTeleporterConsoleWindow : FancyWindow
 
     public event Action<NetEntity?>? SendTeleporterLinkChangeAction;
 
-    private static readonly Color DefaultBlipColor = Color.Aqua;
-    private static readonly Color UnpoweredBlipColor = Color.Gray;
-    private static readonly Color SelectedBlipColor = Color.Green;
+    private static readonly Color DefaultBlipColor = Color.Aqua; //TODO: UI palette usage
+    private static readonly Color UnpoweredBlipColor = Color.Gray; //TODO: UI palette usage
+    private static readonly Color SelectedBlipColor = Color.Green; //TODO: UI palette usage
 
     private NetEntity? _trackedEntity;
     private readonly Texture _teleportMarkerTexture;

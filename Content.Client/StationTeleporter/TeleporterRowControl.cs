@@ -13,9 +13,9 @@ namespace Content.Client.StationTeleporter;
 /// </summary>
 public sealed class TeleporterRowControl : PanelContainer
 {
-    private static readonly Color LinkedBackgroundColor = new(18, 61, 82);
-    private static readonly Color UnlinkedBackgroundColor = new(30, 30, 34);
-    private static readonly Color SelectedBackgroundColor = new(49, 117, 7);
+    private static readonly Color LinkedBackgroundColor = new(18, 61, 82); //TODO: UI palette usage
+    private static readonly Color UnlinkedBackgroundColor = new(30, 30, 34); //TODO: UI palette usage
+    private static readonly Color SelectedBackgroundColor = new(49, 117, 7); //TODO: UI palette usage
 
     public readonly NetEntity TeleporterUid;
     public readonly EntityCoordinates? Coordinates;

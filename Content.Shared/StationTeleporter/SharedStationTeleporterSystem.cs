@@ -77,7 +77,7 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
             {
                 ent.Comp.SelectedTeleporter = teleporter;
             }
-            else //If we have selected teleporter - tie them togather
+            else //If we have selected teleporter - tie them together
             {
                 if (ent.Comp.SelectedTeleporter != teleporter.Value &&
                     _power.IsPowered(ent.Comp.SelectedTeleporter.Value))
