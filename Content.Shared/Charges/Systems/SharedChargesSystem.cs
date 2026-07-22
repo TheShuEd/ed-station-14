@@ -94,7 +94,7 @@ public abstract partial class SharedChargesSystem : EntitySystem
     protected void UpdateChargeVisuals(Entity<LimitedChargesComponent?, AutoRechargeComponent?> entity)
     {
         var current = GetCurrentCharges(entity);
-        _appearance.SetData(entity.Owner, ChargeState.HasCharges, current != 0);
+        _appearance.SetData(entity.Owner, LimitedChargesState.HasCharges, current != 0);
     }
 
     [Pure]

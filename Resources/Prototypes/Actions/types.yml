@@ -19,7 +19,7 @@
         enum.ActionVisuals.IconToggled:
           True: { visible: true }
           False: { visible: false }
-      enum.ChargeState.HasCharges:
+      enum.LimitedChargesState.HasCharges:
         enum.ActionVisuals.Icon:
           True: { color: White }
           False: { color: DimGray }
