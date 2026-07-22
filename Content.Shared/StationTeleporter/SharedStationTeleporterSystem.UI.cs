@@ -1,6 +1,7 @@
 using Content.Shared.Pinpointer;
 using Content.Shared.StationTeleporter.Components;
 using Content.Shared.Teleportation.Components;
+using Robust.Shared.Containers;
 using Robust.Shared.Map;
 
 namespace Content.Shared.StationTeleporter;
@@ -11,6 +12,8 @@ public abstract partial class SharedStationTeleporterSystem
     {
         SubscribeLocalEvent<StationTeleporterConsoleComponent, BoundUIOpenedEvent>(OnUIOpened);
         SubscribeLocalEvent<StationTeleporterConsoleComponent, StationTeleporterClickMessage>(OnUIPortalClicked);
+        SubscribeLocalEvent<StationTeleporterConsoleComponent, EntInsertedIntoContainerMessage>(OnChipStorageChanged);
+        SubscribeLocalEvent<StationTeleporterConsoleComponent, EntRemovedFromContainerMessage>(OnChipStorageChanged);
     }
 
     private void OnUIOpened(Entity<StationTeleporterConsoleComponent> ent, ref BoundUIOpenedEvent args)
@@ -23,6 +26,18 @@ public abstract partial class SharedStationTeleporterSystem
     {
         ToggleTeleporterLink(ent, ref args);
         UpdateUserInterface(ent);
+    }
+
+    private void OnChipStorageChanged(Entity<StationTeleporterConsoleComponent> ent, ref EntInsertedIntoContainerMessage args)
+    {
+        if (args.Container.ID == ent.Comp.ChipStorageName)
+            UpdateUserInterface(ent);
+    }
+
+    private void OnChipStorageChanged(Entity<StationTeleporterConsoleComponent> ent, ref EntRemovedFromContainerMessage args)
+    {
+        if (args.Container.ID == ent.Comp.ChipStorageName)
+            UpdateUserInterface(ent);
     }
 
     private void UpdateUserInterface(Entity<StationTeleporterConsoleComponent> ent)

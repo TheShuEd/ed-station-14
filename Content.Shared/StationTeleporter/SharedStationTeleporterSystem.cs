@@ -10,7 +10,6 @@ using Content.Shared.Teleportation.Systems;
 using Content.Shared.Timing;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
-using Robust.Shared.Timing;
 
 namespace Content.Shared.StationTeleporter;
 
@@ -28,7 +27,6 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
     [Dependency] private LinkedEntitySystem _link = default!;
     [Dependency] private SharedContainerSystem _container = default!;
     [Dependency] private SharedUserInterfaceSystem _uiSystem = default!;
-    [Dependency] private IGameTiming _timing = default!;
     [Dependency] private UseDelaySystem _useDelay = default!;
 
     [Dependency] private EntityQuery<LabelComponent> _labelQuery = default!;
@@ -46,19 +44,11 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
         SubscribeLocalEvent<TeleporterChipComponent, ExaminedEvent>(OnChipExamined);
     }
 
-
-    public override void Update(float frameTime)
+    private void RefreshAllOpenConsoles()
     {
-        base.Update(frameTime);
-
         var query = EntityQueryEnumerator<StationTeleporterConsoleComponent>();
         while (query.MoveNext(out var uid, out var console))
         {
-            if (console.NextUpdateTime > _timing.CurTime)
-                continue;
-
-            console.NextUpdateTime += console.UpdateFrequency;
-
             UpdateUserInterface((uid, console));
         }
     }
@@ -122,6 +112,7 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
             return;
 
         ConnectChipToTeleporter((args.Used, chip), teleporter);
+        RefreshAllOpenConsoles();
 
         _popup.PopupEntity(Loc.GetString("teleporter-console-chip-record"), teleporter, args.User);
         _audio.PlayPredicted(chip.RecordSound, args.Used, args.User);
@@ -162,6 +153,8 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
             _ambient.SetAmbience(ent, false);
             _audio.PlayPvs(ent.Comp.UnlinkSound, xform.Coordinates);
         }
+
+        RefreshAllOpenConsoles();
     }
 
     private void OnPowerChanged(Entity<StationTeleporterComponent> ent, ref PowerChangedEvent args)
@@ -174,16 +167,15 @@ public abstract partial class SharedStationTeleporterSystem : EntitySystem
         else
         {
             // We look for a portal from our “memory” and see if it's connected to anything. If not, we connect to it ourselves.
-            if (ent.Comp.LastLink is null)
-                return;
-
-            if (_link.GetLink(ent.Comp.LastLink.Value, out _))
+            if (ent.Comp.LastLink is not null)
             {
-                ent.Comp.LastLink = null;
-                return;
+                if (_link.GetLink(ent.Comp.LastLink.Value, out _))
+                    ent.Comp.LastLink = null;
+                else
+                    _link.TryLink(ent, ent.Comp.LastLink.Value);
             }
-
-            _link.TryLink(ent, ent.Comp.LastLink.Value);
         }
+
+        RefreshAllOpenConsoles();
     }
 }

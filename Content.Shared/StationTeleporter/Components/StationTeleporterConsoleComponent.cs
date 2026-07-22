@@ -6,7 +6,7 @@ namespace Content.Shared.StationTeleporter.Components;
 /// <summary>
 /// Console that allows you to manage <see cref="StationTeleporterComponent"/>.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentPause]
+[RegisterComponent, NetworkedComponent]
 [Access(typeof(SharedStationTeleporterSystem))]
 public sealed partial class StationTeleporterConsoleComponent : Component
 {
@@ -39,17 +39,4 @@ public sealed partial class StationTeleporterConsoleComponent : Component
     /// </summary>
     [DataField]
     public string ChipStorageName = "storagebase";
-
-    /// <summary>
-    /// The next time the console's UI state will be recalculated and sent to clients.
-    /// </summary>
-    [DataField, AutoPausedField]
-    public TimeSpan NextUpdateTime = TimeSpan.Zero;
-
-    /// <summary>
-    /// How often the console's UI state is recalculated while its UI is open.
-    /// </summary>
-    [DataField]
-    public TimeSpan UpdateFrequency = TimeSpan.FromSeconds(1f);
-
 }
