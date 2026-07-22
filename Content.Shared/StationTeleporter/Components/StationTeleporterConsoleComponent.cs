@@ -14,7 +14,7 @@ public sealed partial class StationTeleporterConsoleComponent : Component
     /// When initialized, teleporters can automatically generate chips in this console if they have a matching AutoLinkKey.
     /// </summary>
     [DataField]
-    public string? AutoLinkKey = null;
+    public string? AutoLinkKey;
 
     /// <summary>
     /// These are the chips that will appear in the console and automatically communicate with the teleporters.

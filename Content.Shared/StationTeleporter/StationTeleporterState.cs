@@ -11,48 +11,35 @@ public enum StationTeleporterConsoleUIKey
 }
 
 [Serializable, NetSerializable]
-public sealed class StationTeleporterState : BoundUserInterfaceState
+public sealed class StationTeleporterState(List<StationTeleporterStatus> teleporters, NetEntity? selected = null)
+    : BoundUserInterfaceState
 {
-    public NetEntity? SelectedTeleporter;
-    public List<StationTeleporterStatus> Teleporters;
-    public StationTeleporterState(List<StationTeleporterStatus> teleporters, NetEntity? selected = null)
-    {
-        Teleporters = teleporters;
-        SelectedTeleporter = selected;
-    }
+    public NetEntity? SelectedTeleporter = selected;
+    public List<StationTeleporterStatus> Teleporters = teleporters;
 }
 
 [Serializable, NetSerializable]
-public sealed class StationTeleporterStatus
+public sealed class StationTeleporterStatus(
+    NetEntity teleporterUid,
+    NetCoordinates coordinates,
+    NetCoordinates? link,
+    string name,
+    bool powered)
 {
-    public StationTeleporterStatus(NetEntity teleporterUid, NetCoordinates coordinates, NetCoordinates? link, string name, bool powered)
-    {
-        TeleporterUid = teleporterUid;
-        Coordinates = coordinates;
-        LinkCoordinates = link;
-        Name = name;
-        Powered = powered;
-    }
-
-    public NetEntity TeleporterUid;
-    public NetCoordinates? Coordinates;
-    public NetCoordinates? LinkCoordinates;
-    public string Name;
-    public bool Powered;
+    public NetEntity TeleporterUid = teleporterUid;
+    public NetCoordinates? Coordinates = coordinates;
+    public NetCoordinates? LinkCoordinates = link;
+    public string Name = name;
+    public bool Powered = powered;
 }
 
+/// <summary>
+/// Sent when the client clicks on any active teleporter shown by a <see cref="StationTeleporterConsoleComponent"/>.
+/// </summary>
 [Serializable, NetSerializable]
-public sealed class StationTeleporterClickMessage : BoundUserInterfaceMessage
+public sealed class StationTeleporterClickMessage(NetEntity? teleporter) : BoundUserInterfaceMessage
 {
-    public NetEntity? Teleporter;
-
-    /// <summary>
-    /// Sent when the client clicks on any active teleporter shown by a <see cref="StationTeleporterConsoleComponent"/>.
-    /// </summary>
-    public StationTeleporterClickMessage(NetEntity? teleporter)
-    {
-        Teleporter = teleporter;
-    }
+    public NetEntity? Teleporter = teleporter;
 }
 
 [Serializable, NetSerializable]

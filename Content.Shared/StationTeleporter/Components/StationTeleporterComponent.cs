@@ -13,7 +13,7 @@ public sealed partial class StationTeleporterComponent : Component
     /// When initialized, the chip from this teleporter will be automatically generated inside all consoles with the same AutoLinkKey
     /// </summary>
     [DataField]
-    public string? AutoLinkKey = null;
+    public string? AutoLinkKey;
 
     /// <summary>
     /// The sound that plays at the portal when it connects to something
@@ -37,7 +37,7 @@ public sealed partial class StationTeleporterComponent : Component
     /// The last link that the portal will attempt to connect to after power up.
     /// </summary>
     [DataField]
-    public EntityUid? LastLink = null;
+    public EntityUid? LastLink;
 
     /// <summary>
     /// Used for coloring from AppearanceChanged
