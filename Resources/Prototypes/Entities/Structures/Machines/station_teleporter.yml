@@ -16,7 +16,7 @@
       map: ["enum.PowerDeviceVisualLayers.Powered"]
     - sprite: Effects/portal.rsi
       state: portal-gray
-      map: ["Portal"]
+      map: ["portal"]
       shader: unshaded
       visible: false
   - type: ApcPowerReceiver
@@ -29,15 +29,15 @@
           True: { visible: true }
           False: { visible: false }
       enum.LinkedEntityVisuals.HasAnyLinks:
-        Portal:
+        portal:
           True: { visible: true }
           False: { visible: false }
   - type: AmbientSound
     enabled: false
     sound:
       path: /Audio/Ambience/ambi_gateway.ogg
-    range: 5
-    volume: 8
+    range: 8
+    volume: 0
   - type: InteractionOutline
   - type: Physics
     bodyType: Static
@@ -56,7 +56,7 @@
         hard: false
   - type: Appearance
   - type: StationTeleporter
-    portalLayerMap: "Portal"
+    portalLayerMap: "portal"
   - type: Portal
     randomTeleport: false
     canTeleportToOtherMaps: true
