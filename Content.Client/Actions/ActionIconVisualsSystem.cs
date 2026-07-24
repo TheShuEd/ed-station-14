@@ -12,7 +12,7 @@ public sealed partial class ActionIconVisualsSystem : VisualizerSystem<ActionCom
         if (args.Sprite == null)
             return;
 
-        if (AppearanceSystem.TryGetData<SpriteSpecifier>(uid, ActionVisuals.DynamicIcon, out var icon, args.Component))
+        if (AppearanceSystem.TryGetData<SpriteSpecifier>(uid, ActionState.DynamicIcon, out var icon, args.Component))
         {
             if (icon is SpriteSpecifier.EntityPrototype)
                 SpriteSystem.LayerSetTexture((uid, args.Sprite), ActionVisuals.Icon, SpriteSystem.Frame0(icon));
@@ -20,7 +20,7 @@ public sealed partial class ActionIconVisualsSystem : VisualizerSystem<ActionCom
                 SpriteSystem.LayerSetSprite((uid, args.Sprite), ActionVisuals.Icon, icon);
         }
 
-        if (AppearanceSystem.TryGetData<Color>(uid, ActionVisuals.Color, out var color, args.Component))
+        if (AppearanceSystem.TryGetData<Color>(uid, ActionState.Color, out var color, args.Component))
         {
             SpriteSystem.LayerSetColor((uid, args.Sprite), ActionVisuals.Icon, color);
 

@@ -79,7 +79,7 @@ public abstract partial class SharedActionsSystem : EntitySystem
 
     private void OnActionMapInit(Entity<ActionComponent> ent, ref MapInitEvent args)
     {
-        _appearance.SetData(ent, ActionVisuals.Toggled, ent.Comp.Toggled);
+        _appearance.SetData(ent, ActionState.Toggled, ent.Comp.Toggled);
     }
 
     private void OnActionShutdown(Entity<ActionComponent> ent, ref ComponentShutdown args)
@@ -235,7 +235,7 @@ public abstract partial class SharedActionsSystem : EntitySystem
             return;
 
         ent.Comp.Toggled = toggled;
-        _appearance.SetData(ent, ActionVisuals.Toggled, toggled);
+        _appearance.SetData(ent, ActionState.Toggled, toggled);
         UpdateAction(ent);
         DirtyField(ent, ent.Comp, nameof(ActionComponent.Toggled));
     }
@@ -978,9 +978,9 @@ public abstract partial class SharedActionsSystem : EntitySystem
             return;
 
         if (icon == null)
-            _appearance.RemoveData(ent.Owner, ActionVisuals.DynamicIcon);
+            _appearance.RemoveData(ent.Owner, ActionState.DynamicIcon);
         else
-            _appearance.SetData(ent.Owner, ActionVisuals.DynamicIcon, icon);
+            _appearance.SetData(ent.Owner, ActionState.DynamicIcon, icon);
     }
 
     public void SetIconColor(Entity<ActionComponent?> ent, Color color)
@@ -988,7 +988,7 @@ public abstract partial class SharedActionsSystem : EntitySystem
         if (!_actionQuery.Resolve(ent, ref ent.Comp))
             return;
 
-        _appearance.SetData(ent.Owner, ActionVisuals.Color, color);
+        _appearance.SetData(ent.Owner, ActionState.Color, color);
     }
 
     /// <summary>
