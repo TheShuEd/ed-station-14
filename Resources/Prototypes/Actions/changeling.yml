@@ -278,3 +278,28 @@
     sprite: Interface/Actions/changeling2.rsi
     layers:
     - state: nv_on
+
+- type: entity
+  parent: BaseAction
+  id: ActionChangelingScreech
+  name: Screech
+  description: We produce a deafening screech that weakens those around us.
+  components:
+  - type: Sprite
+    sprite: Interface/Actions/changeling2.rsi
+    layers:
+    - state: screech
+  - type: Action
+    useDelay: 60 # unbalanced :godo:
+    raiseOnAction: true
+  - type: ScreechAction
+    effects:
+    - !type:MovementSpeedModifier
+      walkSpeedModifier: 0.5
+      sprintSpeedModifier: 0.5
+      time: 5
+    - !type:Disarm
+    - !type:ModifyKnockdown
+      probability: 0.5
+  - type: InstantAction
+    event: !type:ScreechActionEvent
